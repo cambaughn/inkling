@@ -3,6 +3,7 @@
 
 import Logo from "./Logo";
 import "./App.css";
+import Content from "../content-script/src/Content";
 
 function App() {
   return (
@@ -12,6 +13,8 @@ function App() {
         <p>Hello, World!</p>
         <p>I'm a Chrome Extension Popup!</p>
       </header>
+
+      <Content />
     </div>
   );
 }
