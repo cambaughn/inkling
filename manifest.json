@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "React Content Script",
+  "name": "Inkling",
   "version": "1.0.0",
   "action": {
     "default_title": "Popup",
@@ -10,9 +10,8 @@
   "icons": {},
   "content_scripts": [
     {
-      "matches": ["https://blank.org/*"],
-      "js": ["content-script/src/main.tsx"],
-      "media": []
+      "matches": ["https://www.youtube.com/*"],
+      "js": ["content-script/src/main.tsx"]
     }
   ]
 }
