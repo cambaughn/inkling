@@ -6,17 +6,23 @@ import "./App.css";
 import { useEffect, useState } from "react";
 
 function App() {
-  console.log('content script!!!!')
+  console.log('content here!!!!')
   const [videoId, setVideoId] = useState<string>('');
 
   const currentUrl = window.location.href;
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const url = urlParams.get('url');
+    // const urlParams = new URLSearchParams(window.location.search);
+    // const url = urlParams.get('url');
+    const url = window.location.href;
+
+
+    console.log('trying to get the url ', url);
+    
 
     if (url) {
       const match = url.match(/(?:\/|%3D|v=)([0-9A-Za-z_-]{11}).*/);
       if (match) {
+        console.log('match!!!! ', match[1])
         setVideoId(match[1]);
       }
     }

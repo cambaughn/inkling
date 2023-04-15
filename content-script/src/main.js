@@ -1,3 +1,4 @@
+/** @jsx React.DOM */
 import React from "react";
 import { createRoot } from "react-dom/client";
 import "./main.css";
@@ -20,10 +21,7 @@ if (body) {
 }
 
 const container = document.getElementById("root");
-const root = createRoot(container!);
+const root = createRoot(container);
+const appComponent = <App />
 
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+root.render(appComponent);
