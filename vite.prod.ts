@@ -17,5 +17,4 @@ export default defineConfig({
     // Build Chrome Extension
     crx({ manifest }),
   ],
-  mode: 'dev'
 });

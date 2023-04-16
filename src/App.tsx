@@ -3,20 +3,25 @@
 
 import Logo from "./Logo";
 import "./App.css";
-import Content from "../content-script/src/Content";
+import Content from "../content-script/src/Content.jsx";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <Logo className="App-logo" id="App-logo" title="React logo" />
-        <p>Hello, World!</p>
-        <p>I'm a Chrome Extension Popup!</p>
-      </header>
+  const active = 'content';
 
-      <Content />
-    </div>
-  );
+  if (import.meta.env.MODE === 'dev' && active === 'content') {
+    return <Content />
+  } else {
+    return (
+      <div className="App">
+        <header className="App-header">
+          <Logo className="App-logo" id="App-logo" title="React logo" />
+          <p>Hello, World!</p>
+          <p>I'm a Chrome Extension Popup!</p>
+        </header>
+      </div>
+    );
+  }
+
 }
 
 export default App;

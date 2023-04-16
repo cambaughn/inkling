@@ -4,10 +4,11 @@
 // import Logo from "./Logo";
 import "./Content.css";
 import { useEffect, useState } from "react";
+import Bar from "./Bar/Bar";
 
-function Content() {
-  console.log('content here!!!!')
-  const [videoId, setVideoId] = useState('');
+function Content(videoId) {
+  // const [videoId, setVideoId] = useState('');
+  const [videoData, setVideoData] = useState({});
 
   const getVideoId = () => {
     const url = window.location.href;
@@ -21,24 +22,32 @@ function Content() {
       }
     }
   }
-  useEffect(getVideoId, []);
+  // useEffect(getVideoId, []);
 
-  useEffect(() => {
-    const updateUrl = () => {
-      console.log('klsdjfldksjfldskjflkjdsf')
-      getVideoId();
+
+
+  // useEffect(() => {
+  //   const updateUrl = () => {
+  //     console.log('klsdjfldksjfldskjflkjdsf')
+  //     getVideoId();
+
+  //   }
+  //   window.addEventListener("hashchange", updateUrl);
+
+  //   return () => {
+  //     window.removeEventListener("hashchange", updateUrl);
+  //   };
+  // }, []);
+
+  const getYoutubeData = async () => {
+    if (videoId) {
 
     }
-    window.addEventListener("hashchange", updateUrl);
-
-    return () => {
-      window.removeEventListener("hashchange", updateUrl);
-    };
-  }, []);
+  }
 
   return (
     <div className="App" id="inkling">
-      
+      <Bar />
     </div>
   );
 }
