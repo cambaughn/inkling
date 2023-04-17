@@ -1,0 +1,21 @@
+.buttonContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 15px;
+}
+
+.inklingButton {
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background-color: #272727;
+  color: white;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.inklingButton:hover {
+  background-color: #3f3f3f !important;
+}

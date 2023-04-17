@@ -9,7 +9,11 @@ function App() {
   const active = 'content';
 
   if (import.meta.env.MODE === 'dev' && active === 'content') {
-    return <Content />
+    return (
+      <div className="devContentWrapper">
+        <Content videoId="nJslrTT-Yhc" />
+      </div>
+    )
   } else {
     return (
       <div className="App">
