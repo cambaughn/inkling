@@ -37,13 +37,32 @@ function Content({ videoId }) {
   // useEffect(getVideoId, []);
 
   const determineContent = () => {
-    console.log('determining content ');
     if (tabs[activeTab] === 'Inkling') {
-      setContent('hello!')
+      setContent(videoData?.gptResponse?.content);
     } else if (tabs[activeTab] === 'Description') {
       let videoDescription = videoData?.videoDetails?.snippet?.description;
-      console.log('getting description ----------- ', videoDescription);
       setContent(videoDescription);
+    }
+  }
+
+  const getGist = async () => {
+    try {
+      console.log(`Sending text: ${text}`);
+      let prompt = text;
+
+      let updatedMessages = [...messages, {"role": "user", "content": prompt}];
+      const response = await openai.createChatCompletion({
+        model: "gpt-3.5-turbo",
+        messages: updatedMessages
+      })
+
+      updatedMessages.push(response.data.choices[0].message);
+      setMessages(updatedMessages);
+      setText('');
+      console.log('response! ', response.data.choices[0].message);
+    } catch (error) {
+      console.log('have error');
+      console.error(error)
     }
   }
 
@@ -80,9 +99,6 @@ function Content({ videoId }) {
   }, [])
 
   useEffect(determineContent, [videoData, activeTab]);
-
-
-  console.log('active tab --------', activeTab)
 
   return (
     <div className="App" id="inkling">
