@@ -3,8 +3,17 @@
   height: 400px;
   border-radius: 12px;
   background-color: #272727;
+  padding: 15px;
+  box-sizing: border-box;
 }
 
 .descriptionContainer p {
-  color: white;
+  color: #ECECEC;
+  font-family: "Roboto", "Arial", sans-serif;
+  font-size: 0.9em;
+  text-align: left;
+  line-height: 1.5em;
+  margin: 0;
+  /* font-size: 1.4rem; */
+  /* line-height: 2rem; */
 }
