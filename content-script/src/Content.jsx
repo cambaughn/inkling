@@ -30,7 +30,8 @@ function Content({ videoId }) {
       const match = url.match(/(?:\/|%3D|v=)([0-9A-Za-z_-]{11}).*/);
       if (match) {
         console.log('match!!!! ', match[1])
-        setVideoId(match[1]);
+        return match[1];
+        // setVideoId(match[1]);
       }
     }
   }
@@ -83,6 +84,10 @@ function Content({ videoId }) {
 
   useEffect(() => {
     const getYoutubeData = async () => {
+      videoId = videoId || getVideoId();
+
+      console.log('got video id ', videoId);
+
       if (videoId) {
         const url = `https://regularimaginativedefinition.cameronbaughn.repl.co/video/${videoId}`;
         

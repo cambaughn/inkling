@@ -20,12 +20,54 @@ import Content from "./Content.jsx";
 //   body.prepend(app);
 // }
 
-const app = document.getElementById("bottom-row") || document.createElement("div");
-app.id = "bottom-row";
+// const app = document.getElementById("bottom-row") || document.createElement("div");
+// app.id = "bottom-row";
 
 
-// const container = document.getElementById("root");
-const container = app;
-const root = createRoot(container);
+// // const container = document.getElementById("root");
+// const container = app;
+// const root = createRoot(container);
 
-root.render(<Content />);
+// root.render(<Content />);
+
+
+// document.addEventListener("DOMContentLoaded", () => {
+//   console.log('dom content loaded -------------')
+//   const app = document.getElementById("bottom-row") || document.createElement("div");
+//   app.id = "bottom-row";
+//   const container = app;
+//   const root = createRoot(container);
+//   root.render(<Content />);
+// });
+
+// window.onload = function() {
+//   console.log('dom content loaded -------------')
+//   const app = document.getElementById("bottom-row") || document.createElement("div");
+//   app.id = "bottom-row";
+//   const container = app;
+//   const root = createRoot(container);
+//   root.render(<Content />);
+// }
+
+let rendered = false;
+
+const observer = new MutationObserver((mutations) => {
+  mutations.forEach((mutation) => {
+    if (mutation.type === "childList") {
+      const app = document.getElementById("bottom-row");
+      if (app && !rendered) {
+        rendered = true;
+        observer.disconnect();
+        app.id = "bottom-row";
+        const container = app;
+        const root = createRoot(container);
+        root.render(<Content />);
+      }
+    }
+  });
+});
+
+observer.observe(document.body, {
+  childList: true,
+  subtree: true,
+});

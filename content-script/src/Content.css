@@ -5,6 +5,7 @@
   align-items: flex-start;
   justify-content: flex-start;
   gap: 15px;
+  margin-top: 20px;
 }
 
 .App-logo {

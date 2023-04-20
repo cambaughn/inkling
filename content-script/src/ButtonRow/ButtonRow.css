@@ -3,12 +3,15 @@
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
-  gap: 15px;
+  /* gap: 15px; */
 }
 
 .inklingButton {
   align-items: center;
-  padding: 0.5rem 1rem;
+  padding-left: 20px;
+  padding-right: 20px;
+  height: 36px;
+  box-sizing: border-box;
   background-color: #272727;
   color: white;
   border-radius: 20px;
