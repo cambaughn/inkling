@@ -2,6 +2,8 @@ import React from 'react';
 import './ButtonRow.css';
 
 const ButtonRow = ({ tabs, activeTab, onChangeTab }) => {
+  let logoUrl = chrome?.runtime ? chrome.runtime.getURL('logo.png') : 'logo.png';
+
   return (
     <div className='buttonContainer'>
       {tabs.map((tab, index) => (
@@ -19,7 +21,10 @@ const ButtonRow = ({ tabs, activeTab, onChangeTab }) => {
           }}
           onClick={() => onChangeTab(index)}
         >
-          {tab}
+          { tab === 'Inkling' &&
+            <img src={logoUrl} alt="Logo" className="logoSmall" />
+          }
+          <span>{tab}</span>
         </button>
       ))}
     </div>
