@@ -22,7 +22,19 @@ function Content({ videoId }) {
     setActiveTab(tabIndex);
   };
 
+  const getVideoId = () => {
+    const url = window.location.href;
+    console.log(url);
 
+    if (url) {
+      const match = url.match(/(?:\/|%3D|v=)([0-9A-Za-z_-]{11}).*/);
+      if (match) {
+        console.log('match!!!! ', match[1])
+        return match[1];
+        // setVideoId(match[1]);
+      }
+    }
+  }
   // useEffect(getVideoId, []);
 
   const determineContent = () => {
