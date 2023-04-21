@@ -22,19 +22,7 @@ function Content({ videoId }) {
     setActiveTab(tabIndex);
   };
 
-  const getVideoId = () => {
-    const url = window.location.href;
-    console.log(url);
 
-    if (url) {
-      const match = url.match(/(?:\/|%3D|v=)([0-9A-Za-z_-]{11}).*/);
-      if (match) {
-        console.log('match!!!! ', match[1])
-        return match[1];
-        // setVideoId(match[1]);
-      }
-    }
-  }
   // useEffect(getVideoId, []);
 
   const determineContent = () => {
@@ -84,14 +72,14 @@ function Content({ videoId }) {
 
   useEffect(() => {
     const getYoutubeData = async () => {
-      videoId = videoId || getVideoId();
+      let currentVideo = videoId || getVideoId();
 
-      console.log('got video id ', videoId);
+      console.log('got video id ', currentVideo);
 
-      if (videoId) {
-        const url = `https://regularimaginativedefinition.cameronbaughn.repl.co/video/${videoId}`;
+      if (currentVideo) {
+        const url = `https://regularimaginativedefinition.cameronbaughn.repl.co/video/${currentVideo}`;
         
-        console.log('trying to get video data! ', videoId, url);
+        console.log('trying to get video data! ', currentVideo, url);
 
         const response = await fetch(url);
         const data = await response.json();
@@ -100,7 +88,25 @@ function Content({ videoId }) {
         setVideoData(data);
       }
     }
+
+    // Run the first time no matter what
     getYoutubeData();
+
+    // if (chrome?.tabs?.onUpdated) {
+    //   console.log('tabs -----------')
+    //   // Then, run on url change
+    //   chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    //     if (tab.active && changeInfo.status === 'complete') {
+    //       getYoutubeData();
+    //     }
+    //   });
+  
+  
+    //   // Cleanup function
+    //   return () => {
+    //     chrome.tabs.onUpdated.removeListener();
+    //   };
+    // }
   }, [])
 
   useEffect(determineContent, [videoData, activeTab]);
