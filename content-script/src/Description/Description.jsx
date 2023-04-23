@@ -4,18 +4,41 @@ import Linkify from 'react-linkify';
 import { getLoadingText } from "./util";
 
 
-function Description({ content }) {
+function Description({ currentTab, inklingContent, videoDescription }) {
   let logoUrl = chrome?.runtime ? chrome.runtime.getURL('logo.png') : 'logo.png';
 
   return (
     <div className="descriptionContainer">
-      {!content &&
+      {!inklingContent && currentTab === 'Inkling' &&
         <div className="logoWrapper">
           <img src={logoUrl} alt="Logo" className="logo-spin" />
           <h3 className="loadingText">{getLoadingText()}</h3>
         </div>
       }
-      <Linkify>{content}</Linkify>
+
+
+
+      { currentTab === 'Description' &&
+        <div className="descriptionDetails">
+          { videoDescription.details.map(detail => (
+            <span>{detail}</span>
+          ))}
+        </div>
+      }
+
+      <Linkify>
+        {currentTab === 'Inkling' &&
+          <>
+            {inklingContent}
+          </>
+        }
+
+        { currentTab === 'Description' &&
+          <>
+            {videoDescription.description}
+          </>
+        }
+      </Linkify>
     </div>
   )
 }

@@ -14,6 +14,25 @@ function Content({ videoId }) {
   const [videoData, setVideoData] = useState({});
   const [activeTab, setActiveTab] = useState(0);
   const [content, setContent] = useState('');
+  const [videoDescription, setVideoDescription] = useState({});
+
+  // Get the video description and details from the page - so we don't have to format the raw data from the API
+  useEffect(() => {
+    let descriptionObject = {};
+    const boldTextElements = document.querySelectorAll('.style-scope.yt-formatted-string.bold');
+    const boldTextContentArray = Array.from(boldTextElements).map(element => element.textContent.trim()).filter(text => !!text.length);
+    console.log(boldTextContentArray);
+    descriptionObject.details = boldTextContentArray;
+
+    // Get the main description
+    const descriptionElement = document.querySelector('.yt-core-attributed-string.yt-core-attributed-string--white-space-pre-wrap');
+    if (descriptionElement) {
+      descriptionObject.description = descriptionElement.textContent;
+    }
+
+    console.log('description: ', descriptionObject);
+    setVideoDescription(descriptionObject);
+  }, []);
 
   const tabs = ['Inkling', 'Description'];
 
@@ -21,21 +40,6 @@ function Content({ videoId }) {
     console.log('handling change tab, ', tabIndex);
     setActiveTab(tabIndex);
   };
-
-  const getVideoId = () => {
-    const url = window.location.href;
-    console.log(url);
-
-    if (url) {
-      const match = url.match(/(?:\/|%3D|v=)([0-9A-Za-z_-]{11}).*/);
-      if (match) {
-        console.log('match!!!! ', match[1])
-        return match[1];
-        // setVideoId(match[1]);
-      }
-    }
-  }
-  // useEffect(getVideoId, []);
 
   const determineTabContent = () => {
     if (tabs[activeTab] === 'Inkling') {
@@ -68,7 +72,7 @@ function Content({ videoId }) {
   return (
     <div className="App" id="inkling">
       <ButtonRow tabs={tabs} activeTab={activeTab} onChangeTab={handleChangeTab} />
-      <Description content={content} />
+      <Description currentTab={tabs[activeTab]} inklingContent={videoData?.gptResponse?.content} videoDescription={videoDescription} />
     </div>
   );
 }
