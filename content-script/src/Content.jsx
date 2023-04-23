@@ -37,7 +37,7 @@ function Content({ videoId }) {
   }
   // useEffect(getVideoId, []);
 
-  const determineContent = () => {
+  const determineTabContent = () => {
     if (tabs[activeTab] === 'Inkling') {
       setContent(videoData?.gptResponse?.content);
     } else if (tabs[activeTab] === 'Description') {
@@ -46,82 +46,24 @@ function Content({ videoId }) {
     }
   }
 
-  const getGist = async () => {
-    try {
-      console.log(`Sending text: ${text}`);
-      let prompt = text;
 
-      let updatedMessages = [...messages, {"role": "user", "content": prompt}];
-      const response = await openai.createChatCompletion({
-        model: "gpt-3.5-turbo",
-        messages: updatedMessages
-      })
-
-      updatedMessages.push(response.data.choices[0].message);
-      setMessages(updatedMessages);
-      setText('');
-      console.log('response! ', response.data.choices[0].message);
-    } catch (error) {
-      console.log('have error');
-      console.error(error)
-    }
-  }
-
-  // useEffect(() => {
-  //   const updateUrl = () => {
-  //     console.log('klsdjfldksjfldskjflkjdsf')
-  //     getVideoId();
-
-  //   }
-  //   window.addEventListener("hashchange", updateUrl);
-
-  //   return () => {
-  //     window.removeEventListener("hashchange", updateUrl);
-  //   };
-  // }, []);
-
-
-
+  // Listen for video data from background.js
   useEffect(() => {
-    const getYoutubeData = async () => {
-      let currentVideo = videoId || getVideoId();
-
-      console.log('got video id ', currentVideo);
-
-      if (currentVideo) {
-        const url = `https://regularimaginativedefinition.cameronbaughn.repl.co/video/${currentVideo}`;
-        
-        console.log('trying to get video data! ', currentVideo, url);
-
-        const response = await fetch(url);
-        const data = await response.json();
-    
-        console.log('data ==== ', data);
-        setVideoData(data);
+    // Add message listener
+    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+      if (message.type === 'videoData') {
+        // do something with the video data
+        setVideoData(message.data);
       }
-    }
+    });
 
-    // Run the first time no matter what
-    getYoutubeData();
+    // Clean up by removing message listener when component unmounts
+    return () => {
+      chrome.runtime.onMessage.removeListener();
+    };
+  }, []);
 
-    // if (chrome?.tabs?.onUpdated) {
-    //   console.log('tabs -----------')
-    //   // Then, run on url change
-    //   chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    //     if (tab.active && changeInfo.status === 'complete') {
-    //       getYoutubeData();
-    //     }
-    //   });
-  
-  
-    //   // Cleanup function
-    //   return () => {
-    //     chrome.tabs.onUpdated.removeListener();
-    //   };
-    // }
-  }, [])
-
-  useEffect(determineContent, [videoData, activeTab]);
+  useEffect(determineTabContent, [videoData, activeTab]);
 
   return (
     <div className="App" id="inkling">
