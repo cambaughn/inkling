@@ -68,7 +68,7 @@ function Content({ videoId }) {
   return (
     <div className="App" id="inkling">
       <ButtonRow tabs={tabs} activeTab={activeTab} onChangeTab={handleChangeTab} />
-      <Description content={content} />
+      <Description currentTab={tabs[activeTab]} videoData={videoData} />
     </div>
   );
 }
