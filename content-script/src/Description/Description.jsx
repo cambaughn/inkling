@@ -18,7 +18,7 @@ function Description({ currentTab, inklingContent, videoDescription }) {
 
 
 
-      { currentTab === 'Description' &&
+      { currentTab === 'Description' && videoDescription?.details?.length > 0 &&
         <div className="descriptionDetails">
           { videoDescription.details.map(detail => (
             <span>{detail}</span>
@@ -33,7 +33,7 @@ function Description({ currentTab, inklingContent, videoDescription }) {
           </>
         }
 
-        { currentTab === 'Description' &&
+        { currentTab === 'Description' && videoDescription &&
           <>
             {videoDescription.description}
           </>
