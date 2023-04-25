@@ -1,17 +1,19 @@
 import { getVideoId, getYoutubeData } from "./util";
 console.log('background script ======');
 
-let pageLoaded = false;
+let currentVideoId = null;
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
   if (changeInfo.status === 'complete' && tab.url.includes('youtube.')) {
-    pageLoaded = true;
     chrome.tabs.sendMessage(tabId, { type: 'videoData', data: null });
-    chrome.tabs.sendMessage(tabId, { type: 'videoId', data: videoId });
     chrome.tabs.sendMessage(tabId, { type: 'refreshDescription' });
     let videoId = getVideoId(tab.url);
+    currentVideoId = videoId;
     getYoutubeData(videoId).then((videoData) => {
-      chrome.tabs.sendMessage(tabId, { type: 'videoData', data: videoData });
+      if (videoId === currentVideoId) {
+        console.log('video id! ', videoId, currentVideoId)
+        chrome.tabs.sendMessage(tabId, { type: 'videoData', data: videoData });
+      }
     });
   }
 });

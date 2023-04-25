@@ -12,7 +12,6 @@ import Description from "./Description/Description";
 function Content({ videoId }) {
   // const [videoId, setVideoId] = useState('');
   const [videoData, setVideoData] = useState({});
-  const [currentVideoId, setCurrentVideoId] = useState(null);
   const [activeTab, setActiveTab] = useState(0);
   const [content, setContent] = useState('');
   const [videoDescription, setVideoDescription] = useState({});
@@ -75,15 +74,10 @@ function Content({ videoId }) {
     // Add message listener
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       if (message.type === 'videoData') {
-        if (!message.data || message.data.videoDetails.id === currentVideoId) {
-          console.log('setting video id ', videoId, currentVideoId);
-          setVideoData(message.data);
-        }
+        setVideoData(message.data);
       } else if (message.type === 'refreshDescription') {
         setVideoDescription({});
         setActiveTab(0);
-      } else if (message.type === 'videoId') {
-        setCurrentVideoId(message.data.videoId);
       }
     });
 
