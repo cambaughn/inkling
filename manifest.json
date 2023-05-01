@@ -7,7 +7,9 @@
     "default_popup": "index.html",
     "default_icon": "logo192.png"
   },
-  "icons": {},
+  "icons": {
+    "128": "icon128.png"
+  },
   "content_scripts": [
     {
       "matches": ["https://www.youtube.com/*"],
@@ -33,5 +35,8 @@
       "resources": [ "logo.png" ],
       "matches": [ "https://*/*" ]
     }
-  ]
+  ],
+  "env": {
+    "OPENAI_API_KEY": "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"
+  },
 }

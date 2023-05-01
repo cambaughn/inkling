@@ -92,7 +92,7 @@ function Content({ videoId }) {
   return (
     <div className="App" id="inkling">
       <ButtonRow tabs={tabs} activeTab={activeTab} onChangeTab={handleChangeTab} />
-      <Description currentTab={tabs[activeTab]} inklingContent={videoData?.gptResponse?.content} videoDescription={videoDescription} />
+      <Description currentTab={tabs[activeTab]} inklingContent={videoData?.gptResponse} videoDescription={videoDescription} />
     </div>
   );
 }

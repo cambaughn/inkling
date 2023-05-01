@@ -16,7 +16,7 @@ const getVideoId = (url) => {
 // Requires change to server
 const getYoutubeData = async (videoId) => {
   if (videoId) {
-    const apiUrl = `https://regularimaginativedefinition.cameronbaughn.repl.co/video/${videoId}`;
+    const apiUrl = `http://localhost:3000/api/video/${videoId}`;
     
     console.log('trying to get video data! ', videoId, apiUrl);
 
