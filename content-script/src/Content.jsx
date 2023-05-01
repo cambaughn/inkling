@@ -9,10 +9,11 @@ import Description from "./Description/Description";
 // import Bar from "./Bar/Bar";
 // import { findSubtitles } from "./util";
 
-function Content({ videoId }) {
+function Content() {
   // const [videoId, setVideoId] = useState('');
   const [videoData, setVideoData] = useState({});
   const [activeTab, setActiveTab] = useState(0);
+  const [videoId, setVideoId] = useState('');
   const [content, setContent] = useState('');
   const [videoDescription, setVideoDescription] = useState({});
 
@@ -73,8 +74,10 @@ function Content({ videoId }) {
   useEffect(() => {
     // Add message listener
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-      if (message.type === 'videoData') {
+      if (message.type === 'videoId') {
         setVideoData(message.data);
+        setVideoId(message.data);
+        console.log('setting video id ', message.data);
       } else if (message.type === 'refreshDescription') {
         setVideoDescription({});
         setActiveTab(0);
