@@ -8,8 +8,6 @@ const getSummary = async (videoDetails, subtitles) => {
   });
   const openai = new OpenAIApi(configuration);
 
-  console.log('getting summary!!!!!!');
-
   try {
     const videoTitle = videoDetails?.snippet?.title;
     const videoDescription = videoDetails?.snippet?.description;

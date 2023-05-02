@@ -13,7 +13,6 @@ function Description({ currentTab, videoSummary, videoDescription }) {
     setLoadingText(text);
   }, []);
 
-  console.log('current tab and such ', currentTab, (currentTab === 'Inkling' && videoSummary.length > 0), videoSummary.length)
   return (
     <div className="descriptionContainer">
       {currentTab === 'Inkling' && videoSummary.length === 0 &&
