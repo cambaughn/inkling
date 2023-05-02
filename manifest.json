@@ -39,5 +39,6 @@
   ],
   "env": {
     "OPENAI_API_KEY": "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"
+    "MODE": "dev"
   }
 }

@@ -9,9 +9,10 @@ const getVideoId = (url) => {
   }
 }
 
+const baseApiUrl = chrome?.runtime?.getManifest().env?.MODE === 'dev' ? 'http://localhost:3000/api' : 
 
 const getYouTubeSubtitles = async (videoId) => {
-  const apiUrl = `http://localhost:3000/api/subtitles/${videoId}`;
+  const apiUrl = `${baseApiUrl}/subtitles/${videoId}`;
   
   const response = await fetch(apiUrl);
   const data = await response.json();
@@ -21,7 +22,7 @@ const getYouTubeSubtitles = async (videoId) => {
 
 
 const getVideoDetails = async (videoId) => {
-  const apiUrl = `http://localhost:3000/api/video/${videoId}`;
+  const apiUrl = `${baseApiUrl}/video/${videoId}`;
   
   const response = await fetch(apiUrl);
   const data = await response.json();
