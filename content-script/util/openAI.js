@@ -1,13 +1,14 @@
-const { Configuration, OpenAIApi } = require('openai');
+import { Configuration, OpenAIApi } from 'openai';
 
 const getSummary = async (videoDetails, subtitles) => {
   const OPENAI_API_KEY = chrome.runtime.getManifest().env.OPENAI_API_KEY;
-  console.log('logging env variables: ', OPENAI_API_KEY);
   
   const configuration = new Configuration({
     apiKey: OPENAI_API_KEY,
   });
   const openai = new OpenAIApi(configuration);
+
+  console.log('getting summary!!!!!!');
 
   try {
     const videoTitle = videoDetails?.snippet?.title;
@@ -28,11 +29,8 @@ const getSummary = async (videoDetails, subtitles) => {
       model: "gpt-3.5-turbo",
       messages
     });
-    console.log( '3. Got GPT-3 response ');
 
     const responseText = openAiResponse?.data?.choices[0].message?.content;
-
-    console.log('response ====> ', openAiResponse.data.choices[0].message.content);
 
     return responseText;
   } catch (error) {
@@ -40,3 +38,5 @@ const getSummary = async (videoDetails, subtitles) => {
     return null;
   }
 };
+
+export { getSummary }

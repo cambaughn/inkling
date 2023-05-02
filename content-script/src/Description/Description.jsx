@@ -1,21 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import './Description.css';
 import Linkify from 'react-linkify';
 import { getLoadingText } from "./util";
 
 
-function Description({ currentTab, inklingContent, videoDescription }) {
+function Description({ currentTab, videoSummary, videoDescription }) {
+  const [loadingText, setLoadingText] = useState('');
   let logoUrl = chrome?.runtime ? chrome.runtime.getURL('logo.png') : 'logo.png';
 
+  useEffect(() => {
+    let text = getLoadingText();
+    setLoadingText(text);
+  }, []);
+
+  console.log('current tab and such ', currentTab, (currentTab === 'Inkling' && videoSummary.length > 0), videoSummary.length)
   return (
     <div className="descriptionContainer">
-      {!inklingContent && currentTab === 'Inkling' &&
+      {currentTab === 'Inkling' && videoSummary.length === 0 &&
         <div className="logoWrapper">
           <img src={logoUrl} alt="Logo" className="logo-spin" />
-          <h3 className="loadingText">{getLoadingText()}</h3>
+          <h3 className="loadingText">{loadingText}</h3>
         </div>
       }
 
+      {currentTab === 'Inkling' && videoSummary.length > 0 &&
+          <Linkify>
+            {videoSummary}
+          </Linkify>
+        }
 
 
       { currentTab === 'Description' && videoDescription?.details?.length > 0 &&
@@ -26,19 +38,11 @@ function Description({ currentTab, inklingContent, videoDescription }) {
         </div>
       }
 
-      <Linkify>
-        {currentTab === 'Inkling' &&
-          <>
-            {inklingContent}
-          </>
-        }
-
-        { currentTab === 'Description' && videoDescription &&
-          <>
-            {videoDescription.description}
-          </>
-        }
-      </Linkify>
+      { currentTab === 'Description' && videoDescription &&
+        <Linkify>
+          {videoDescription.description}
+        </Linkify>
+      }
     </div>
   )
 }

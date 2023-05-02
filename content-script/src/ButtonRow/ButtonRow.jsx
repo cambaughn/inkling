@@ -8,7 +8,6 @@ const ButtonRow = ({ tabs, activeTab, onChangeTab }) => {
     <div className='buttonContainer'>
       {tabs.map((tab, index) => (
         <button
-          key={index}
           className='inklingButton'
           style={{
             background: activeTab === index ? '#3F3F3F' : '#272727',
@@ -20,6 +19,7 @@ const ButtonRow = ({ tabs, activeTab, onChangeTab }) => {
             cursor: 'pointer',
           }}
           onClick={() => onChangeTab(index)}
+          key={tab}
         >
           { tab === 'Inkling' &&
             <img src={logoUrl} alt="Logo" className="logoSmall" />

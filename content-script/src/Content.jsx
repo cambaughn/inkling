@@ -6,16 +6,48 @@ import "./Content.css";
 import { useEffect, useState } from "react";
 import ButtonRow from "./ButtonRow/ButtonRow";
 import Description from "./Description/Description";
-// import Bar from "./Bar/Bar";
-// import { findSubtitles } from "./util";
+// Util
+import { getVideoDetails, getYouTubeSubtitles } from "../util/youTube";
+import { getSummary } from "../util/openAI";
+
 
 function Content() {
-  // const [videoId, setVideoId] = useState('');
-  const [videoData, setVideoData] = useState({});
-  const [activeTab, setActiveTab] = useState(0);
   const [videoId, setVideoId] = useState('');
-  const [content, setContent] = useState('');
+  const [activeTab, setActiveTab] = useState(0);
   const [videoDescription, setVideoDescription] = useState({});
+  const [videoDetails, setVideoDetails] = useState(null);
+  const [subtitles, setSubtitles] = useState('');
+  const [videoSummary, setVideoSummary] = useState('');
+
+  // Whenever the videoId changes, get the new video details
+  useEffect(() => {
+    async function fetchVideoDetails() {
+      const details = await getVideoDetails(videoId);
+      setVideoDetails(details);
+    }    
+    
+    async function fetchSubtitles() {
+      const transcript = await getYouTubeSubtitles(videoId);
+      setSubtitles(transcript);
+    }
+
+    if (videoId && !videoDetails && !subtitles) {
+      fetchVideoDetails();
+      fetchSubtitles();
+    }
+  }, [videoId]);
+
+  // When videoDetails and subtitles are available, send them to openAI for the summary 
+  useEffect(() => {
+    async function fetchSummary() {
+      const gptSummary = await getSummary(videoDetails, subtitles);
+      setVideoSummary(gptSummary);
+    }    
+
+    if (videoDetails && subtitles && !videoSummary) {
+      fetchSummary();
+    }
+  }, [videoDetails, subtitles]);
 
   // Get the video description and details from the page - so we don't have to format the raw data from the API
   useEffect(() => {
@@ -60,27 +92,13 @@ function Content() {
     setActiveTab(tabIndex);
   };
 
-  const determineTabContent = () => {
-    if (tabs[activeTab] === 'Inkling') {
-      setContent(videoData?.gptResponse?.content);
-    } else if (tabs[activeTab] === 'Description') {
-      let videoDescription = videoData?.videoDetails?.snippet?.description;
-      setContent(videoDescription);
-    }
-  }
-
-
-  // Listen for video data from background.js
+  // Listen for messages from background.js
   useEffect(() => {
     // Add message listener
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-      if (message.type === 'videoId') {
-        setVideoData(message.data);
+      if (message.type === 'videoId') { // if there are changes to the videoId
         setVideoId(message.data);
         console.log('setting video id ', message.data);
-      } else if (message.type === 'refreshDescription') {
-        setVideoDescription({});
-        setActiveTab(0);
       }
     });
 
@@ -90,12 +108,11 @@ function Content() {
     };
   }, []);
 
-  useEffect(determineTabContent, [videoData, activeTab]);
-
+  console.log('summary ----- ', videoSummary.length, subtitles.length, videoDetails);
   return (
     <div className="App" id="inkling">
-      <ButtonRow tabs={tabs} activeTab={activeTab} onChangeTab={handleChangeTab} />
-      <Description currentTab={tabs[activeTab]} inklingContent={videoData?.gptResponse} videoDescription={videoDescription} />
+      <ButtonRow tabs={tabs} activeTab={activeTab} onChangeTab={handleChangeTab} key="button-row" />
+      <Description currentTab={tabs[activeTab]} videoSummary={videoSummary} videoDescription={videoDescription} key="description" />
     </div>
   );
 }

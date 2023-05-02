@@ -18,6 +18,7 @@ const observer = new MutationObserver((mutations) => {
     if (mutation.type === "childList") {
       const app = document.getElementById("bottom-row");
       if (app && !placed) {
+        console.log('mounting app!');
         placed = true;
         observer.disconnect();
         app.id = "bottom-row";
