@@ -108,11 +108,17 @@ function Content() {
     };
   }, []);
 
+  // In your Content.js file
+  useEffect(() => {
+    // Send a message to the background script when the component has mounted
+    chrome.runtime.sendMessage({ type: 'contentScriptMounted' });
+  }, []);
+
   console.log('summary ----- ', videoSummary.length, subtitles.length, videoDetails);
   return (
     <div className="App" id="inkling">
-      <ButtonRow tabs={tabs} activeTab={activeTab} onChangeTab={handleChangeTab} key="button-row" />
-      <Description currentTab={tabs[activeTab]} videoSummary={videoSummary} videoDescription={videoDescription} key="description" />
+      <ButtonRow tabs={tabs} activeTab={activeTab} onChangeTab={handleChangeTab} key="inkling-button-row" />
+      <Description currentTab={tabs[activeTab]} videoSummary={videoSummary} videoDescription={videoDescription} key="inkling-description" />
     </div>
   );
 }
