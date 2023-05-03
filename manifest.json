@@ -28,8 +28,7 @@
   },
   "permissions": [
     "tabs",
-    "runtime",
-    "<all_urls>"
+    "runtime"
   ],
   "web_accessible_resources": [
     {

@@ -5,7 +5,7 @@ let videoId = null;
 let mounted = false;
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-  console.log('testing tab update =====', tab.url);
+  console.log('testing tab update =====', tab.url, changeInfo.status);
   if (changeInfo.status === 'complete' && tab.url.includes('youtube.')) {
     videoId = getVideoId(tab.url);
     console.log('get video id =====', videoId);
