@@ -9,7 +9,7 @@ const getVideoId = (url) => {
   }
 }
 
-const baseApiUrl = chrome?.runtime?.getManifest().env?.MODE === 'dev' ? 'http://localhost:3000/api' : 
+const baseApiUrl = chrome?.runtime?.getManifest().env?.MODE === 'dev' ? 'http://localhost:3000/api' : 'https://inkling-api.vercel.app/api';
 
 const getYouTubeSubtitles = async (videoId) => {
   const apiUrl = `${baseApiUrl}/subtitles/${videoId}`;
