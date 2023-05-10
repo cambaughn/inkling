@@ -12,7 +12,7 @@ const getSummary = async (videoDetails, subtitles) => {
     const videoTitle = videoDetails?.snippet?.title;
     const videoDescription = videoDetails?.snippet?.description;
 
-    const prompt = `Please provide a 2-3 sentence summary of the main topic of the video, followed by bullet-pointed list of the main points. - Title: ${videoTitle}, - Description: ${videoDescription} - Transcript: ${subtitles}`;
+    const prompt = `Please provide a 2-3 sentence summary of the main topic of the video, followed by bullet pointed list of the main points. - Title: ${videoTitle}, - Description: ${videoDescription} - Transcript: ${subtitles}`;
 
     const messages = [
       {
