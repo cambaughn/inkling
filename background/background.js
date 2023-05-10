@@ -5,14 +5,11 @@ let videoId = null;
 let mounted = false;
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-  console.log('testing tab update =====', tab.url, changeInfo.status);
   if (changeInfo.status === 'complete' && tab.url.includes('youtube.')) {
     videoId = getVideoId(tab.url);
     console.log('get video id =====', videoId);
-    if (videoId && mounted) {
+    if (videoId) {
       chrome.tabs.sendMessage(tabId, { type: 'videoId', data: videoId });
-    } else if (videoId && !mounted) {
-      chrome.tabs.sendMessage(tabId, { type: 'renderApp' });
     }
   }
 });

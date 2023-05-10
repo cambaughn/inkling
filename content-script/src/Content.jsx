@@ -103,7 +103,7 @@ function Content() {
   useEffect(() => {
     // Add message listener
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-      if (message.type === 'videoId') { // if there are changes to the videoId
+      if (message.type === 'videoId' && message.data !== videoId) { // if there are changes to the videoId
         resetState();
         setVideoId(message.data);
         console.log('setting video id ', message.data);
@@ -123,7 +123,7 @@ function Content() {
   }, []);
 
   return (
-    <div className="App" id="inkling">
+    <div id="inkling">
       <ButtonRow tabs={tabs} activeTab={activeTab} onChangeTab={handleChangeTab} key="inkling-button-row" />
       <Description currentTab={tabs[activeTab]} videoSummary={videoSummary} videoDescription={videoDescription} key="inkling-description" />
     </div>
