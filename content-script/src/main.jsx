@@ -3,46 +3,33 @@ import { createRoot } from "react-dom";
 import "./main.css";
 import Content from "./Content.jsx";
 
-let placed = false;
-let observer = null; // Declare observer variable outside the scope
+const hiddenContainer = document.createElement("div");
+hiddenContainer.style.display = "none"; // Hide the container initially
+document.body.appendChild(hiddenContainer);
 
-console.log("content script ======");
-
-function mountApp() {
-  const app = document.getElementById("bottom-row");
-  console.log('Testing the observer...');
-  const descriptionInner = document.getElementById('info-container');
-  if (app && descriptionInner && !placed) {
-    console.log('Mounting app!');
-    placed = true;
-    observer.disconnect();
-    app.id = "bottom-row";
-    const root = createRoot(app);
-    root.render(<Content />);
-  }
-}
-
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  if (request.type === 'videoId' && !!request.data) {
-    console.log('Received message for videoId ', request.data);
-    // Perform actions when the videoId is received
-    console.log('Received videoId: ', request.data);
-    // Your code here...
-    // mountApp();
-    
-    if (!observer) {
-      observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          if (mutation.type === "childList") {
-            mountApp();
-          }
-        });
-      });
+const observer = new MutationObserver((mutations) => {
+  mutations.forEach((mutation) => {
+    if (mutation.type === "childList") {
+      const app = document.getElementById("bottom-row");
+      // console.log('Testing the app...');
       
-      observer.observe(document.body, {
-        childList: true,
-        subtree: true,
-      });
+      if (app) {
+        console.log('Mounting app!');
+        placed = true;
+        observer.disconnect();
+        app.id = "bottom-row";
+        const root = createRoot(app);
+        root.render(<Content />);
+      }
     }
-  }
+  });
 });
+
+observer.observe(document.body, {
+  childList: true,
+  subtree: true,
+});
+
+// Render <Content /> to the hidden container on page load
+const root = createRoot(hiddenContainer);
+root.render(<Content />);
