@@ -28,7 +28,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     // Perform actions when the videoId is received
     console.log('Received videoId: ', request.data);
     // Your code here...
-    mountApp();
+    // mountApp();
     
     if (!observer) {
       observer = new MutationObserver((mutations) => {
