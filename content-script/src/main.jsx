@@ -2,6 +2,8 @@ import React from "react";
 import { createRoot } from "react-dom";
 import "./main.css";
 import Content from "./Content.jsx";
+import createDescriptionComponent from "./Description/Description.js";
+import "./Description/Description.css";
 
 let placed = false;
 let observer;
@@ -24,11 +26,14 @@ function startMutationObserver() {
           app.id = "bottom-row";
           // place empty div in bottom-row
           console.log('appending child');
-          const div = document.createElement("div");
-          div.id = 'lskdfjdlksfjkl'
-          app.appendChild(div);
+          const inkling = document.createElement("div");
+          inkling.id = 'inkling'
+          let description = createDescriptionComponent("Inkling", '', '');
+          inkling.appendChild(description);
+          
           // const root = createRoot(app);
           // root.render(<Content />);
+          app.appendChild(inkling);
         }
       }
     });

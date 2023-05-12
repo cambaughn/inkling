@@ -4,7 +4,6 @@
 import "./Content.css";
 import { useEffect, useState } from "react";
 import ButtonRow from "./ButtonRow/ButtonRow";
-import Description from "./Description/Description";
 // Util
 import { getVideoDetails, getYouTubeSubtitles } from "../util/youTube";
 import { getSummary } from "../util/openAI";
@@ -125,7 +124,6 @@ function Content() {
   return (
     <div id="inkling">
       <ButtonRow tabs={tabs} activeTab={activeTab} onChangeTab={handleChangeTab} key="inkling-button-row" />
-      <Description currentTab={tabs[activeTab]} videoSummary={videoSummary} videoDescription={videoDescription} key="inkling-description" />
     </div>
   );
 }
