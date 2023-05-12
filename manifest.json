@@ -12,8 +12,20 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://www.youtube.com/*"],
-      "js": ["content-script/src/main.jsx"]
+      "run_at" : "document_start",
+      "js": ["content-script/before.js"],
+      "matches": [
+        "https://www.youtube.com/*",
+        "http://www.youtube.com/*"
+      ]
+    },
+    {
+      "run_at" : "document_idle",
+      "js": ["content-script/src/main.jsx"],
+      "matches": [
+        "https://www.youtube.com/*",
+        "http://www.youtube.com/*"
+      ]
     }
   ],
   "background": {
