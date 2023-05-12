@@ -1,15 +1,14 @@
 import React from "react";
-import ReactDOM, { createRoot } from "react-dom";
+import { createRoot } from "react-dom";
 import "./main.css";
 import Content from "./Content.jsx";
 
 let placed = false;
 let observer;
-let root;
+
 
 
 console.log('Running main.jsx');
-
 function startMutationObserver() {
   console.log('Starting mutation observer...');
   observer = new MutationObserver((mutations) => {
@@ -23,10 +22,11 @@ function startMutationObserver() {
           placed = true;
           observer.disconnect();
           app.id = "bottom-row";
-          root = createRoot(app);
-          setTimeout(() => {
-            ReactDOM.render(<Content />, app);
-          }, 0);
+          // place empty div in bottom-row
+          const div = document.createElement("div");
+          app.appendChild(div);
+          // const root = createRoot(app);
+          // root.render(<Content />);
         }
       }
     });
@@ -37,7 +37,6 @@ function startMutationObserver() {
     subtree: true,
   });
 }
-
 
 
 chrome.runtime.onMessage.addListener((message) => {

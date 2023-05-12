@@ -9,8 +9,8 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
     videoId = getVideoId(tab.url);
     console.log('get video id =====', videoId);
     if (videoId) {
-      // chrome.tabs.sendMessage(tabId, { type: 'videoId', data: videoId });
-      chrome.tabs.sendMessage(tabId, { type: 'startObserver' });
+      chrome.tabs.sendMessage(tabId, { type: 'videoId', data: videoId });
+      // chrome.tabs.sendMessage(tabId, { type: 'startObserver' });
     }
   }
 });
