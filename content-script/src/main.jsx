@@ -23,7 +23,9 @@ function startMutationObserver() {
           observer.disconnect();
           app.id = "bottom-row";
           // place empty div in bottom-row
+          console.log('appending child');
           const div = document.createElement("div");
+          div.id = 'lskdfjdlksfjkl'
           app.appendChild(div);
           // const root = createRoot(app);
           // root.render(<Content />);
@@ -37,6 +39,8 @@ function startMutationObserver() {
     subtree: true,
   });
 }
+
+startMutationObserver();
 
 
 chrome.runtime.onMessage.addListener((message) => {
