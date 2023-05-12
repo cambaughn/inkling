@@ -3,17 +3,15 @@ import { createRoot } from "react-dom";
 import "./main.css";
 import Content from "./Content.jsx";
 
-const hiddenContainer = document.createElement("div");
-hiddenContainer.style.display = "none"; // Hide the container initially
-document.body.appendChild(hiddenContainer);
+let placed = false;
 
 const observer = new MutationObserver((mutations) => {
   mutations.forEach((mutation) => {
     if (mutation.type === "childList") {
       const app = document.getElementById("bottom-row");
-      // console.log('Testing the app...');
-      
-      if (app) {
+      console.log('Testing the app...');
+      const descriptionInner = document.getElementById('description-inner');
+      if (app && descriptionInner && !placed) {
         console.log('Mounting app!');
         placed = true;
         observer.disconnect();
@@ -29,7 +27,3 @@ observer.observe(document.body, {
   childList: true,
   subtree: true,
 });
-
-// Render <Content /> to the hidden container on page load
-const root = createRoot(hiddenContainer);
-root.render(<Content />);
