@@ -7,19 +7,20 @@ import "./Description/Description.css";
 
 let placed = false;
 let observer;
+let descriptionObserver;
 
 
 
 console.log('Running main.jsx');
-function startMutationObserver() {
+function placeContainerOnPage() {
   console.log('Starting mutation observer...');
   observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
       if (mutation.type === "childList") {
         const app = document.getElementById("bottom-row");
         console.log('Testing the app...');
-        const descriptionInner = document.getElementById('description-inner');
-        if (app && descriptionInner && !placed) {
+        
+        if (app && !placed) {
           console.log('Mounting app!');
           placed = true;
           observer.disconnect();
@@ -30,7 +31,7 @@ function startMutationObserver() {
           inkling.id = 'inkling'
           let description = createDescriptionComponent("Inkling", '', '');
           inkling.appendChild(description);
-          
+
           // const root = createRoot(app);
           // root.render(<Content />);
           app.appendChild(inkling);
@@ -45,11 +46,57 @@ function startMutationObserver() {
   });
 }
 
-startMutationObserver();
+function startDescriptionObserver() {
+  console.log('Starting description observer...');
+  descriptionObserver = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.type === "childList") {
+        
+        let descriptionObject = getDescriptionFromPage();
+
+        if (descriptionObject?.description && placed) {
+          console.log('description found! '), descriptionObject;
+          descriptionObserver.disconnect();
+          const description = document.getElementById('inkling-description');
+          description.innerHTML = descriptionObject.description;
+        }
+      }
+    });
+  });
+
+  descriptionObserver.observe(document.body, {
+    childList: true,
+    subtree: true,
+  });
+}
+
+
 
 
 chrome.runtime.onMessage.addListener((message) => {
   if (message.type === "startObserver") {
-    startMutationObserver();
+    placeContainerOnPage();
+    startDescriptionObserver();
   }
 });
+
+
+
+// Get the video description and details from the page - so we don't have to format the raw data from the API
+const getDescriptionFromPage = () => {
+  const descriptionObject = {};
+
+  // Fetch video details and update the description object
+  const boldTextElements = document.querySelectorAll('.style-scope.yt-formatted-string.bold');
+  const boldTextContentArray = Array.from(boldTextElements)
+    .map(element => element.textContent.trim())
+    .filter(text => !!text.length);
+  descriptionObject.details = boldTextContentArray;
+
+  const descriptionElement = document.querySelector('.yt-core-attributed-string.yt-core-attributed-string--white-space-pre-wrap');
+  if (descriptionElement) {
+    descriptionObject.description = descriptionElement.textContent;
+  }
+
+  return descriptionObject;
+}

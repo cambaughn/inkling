@@ -3,6 +3,7 @@ import Linkify from 'react-linkify';
 
 function createDescriptionComponent(currentTab, videoSummary, videoDescription) {
   const descriptionContainer = document.createElement("div");
+  descriptionContainer.id = "inkling-description";
   descriptionContainer.classList.add("descriptionContainer");
 
   if (currentTab === 'Inkling' && videoSummary.length === 0) {
