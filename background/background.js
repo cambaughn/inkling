@@ -11,12 +11,12 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
       chrome.tabs.sendMessage(tabId, { type: 'startObserver' });
 
       // Whenever the videoId changes, get the new video details
-      let videoDetails = await getVideoDetails(videoId);
-      let subtitles = await getYouTubeSubtitles(videoId);
-      // When videoDetails and subtitles are available, send them to openAI for the summary
-      let summary = await getSummary(videoDetails, subtitles);
+      // let videoDetails = await getVideoDetails(videoId);
+      // let subtitles = await getYouTubeSubtitles(videoId);
+      // // When videoDetails and subtitles are available, send them to openAI for the summary
+      // let summary = await getSummary(videoDetails, subtitles);
 
-      chrome.tabs.sendMessage(tabId, { type: 'videoId', data: videoId });
+      // chrome.tabs.sendMessage(tabId, { type: 'videoId', data: videoId });
     }
   }
 });

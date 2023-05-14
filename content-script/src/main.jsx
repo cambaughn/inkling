@@ -4,47 +4,61 @@ import "./main.css";
 import Content from "./Content.jsx";
 import createDescriptionComponent from "./Description/Description.js";
 import "./Description/Description.css";
+import createButtonRow from "./ButtonRow/ButtonRow";
 
-let placed = false;
 let observer;
 let descriptionObserver;
 
 
-
 console.log('Running main.jsx');
-function placeContainerOnPage() {
-  console.log('Starting mutation observer...');
-  observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-      if (mutation.type === "childList") {
-        const app = document.getElementById("bottom-row");
-        console.log('Testing the app...');
-        
-        if (app && !placed) {
-          console.log('Mounting app!');
-          placed = true;
-          observer.disconnect();
-          app.id = "bottom-row";
-          // place empty div in bottom-row
-          console.log('appending child');
-          const inkling = document.createElement("div");
-          inkling.id = 'inkling'
-          let description = createDescriptionComponent("Inkling", '', '');
-          inkling.appendChild(description);
 
-          // const root = createRoot(app);
-          // root.render(<Content />);
-          app.appendChild(inkling);
+let placed = false;
+observer = new MutationObserver((mutations) => {
+  mutations.forEach((mutation) => {
+    if (mutation.type === "childList") {
+      const app = document.getElementById("bottom-row");
+
+      console.log('Testing the app...', placed);
+
+      if (app && !placed) {
+        // Set the visibility of the description div to hidden
+        const descriptionDiv = app.querySelector("#description");
+        if (descriptionDiv) {
+          descriptionDiv.style.display = "none";
         }
       }
-    });
+      
+      if (app && !placed) {
+        console.log('Mounting app!');
+        placed = true;
+        observer.disconnect();
+        app.id = "bottom-row";
+        // place empty div in bottom-row
+        console.log('appending child');
+        const inkling = document.createElement("div");
+        inkling.id = 'inkling';
+        const buttonComponent = createButtonRow();
+        inkling.appendChild(buttonComponent);
+        let descriptionContainer = createDescriptionComponent("Inkling", '', '');
+        inkling.appendChild(descriptionContainer);
+
+        // const root = createRoot(app);
+        // root.render(<Content />);
+        app.appendChild(inkling);
+      }
+    }
   });
+});
+
+function placeContainerOnPage() {
+  console.log('Starting mutation observer...');
 
   observer.observe(document.body, {
     childList: true,
     subtree: true,
   });
 }
+
 
 function startDescriptionObserver() {
   console.log('Starting description observer...');
@@ -54,8 +68,7 @@ function startDescriptionObserver() {
         
         let descriptionObject = getDescriptionFromPage();
 
-        if (descriptionObject?.description && placed) {
-          console.log('description found! '), descriptionObject;
+        if (descriptionObject?.description) {
           descriptionObserver.disconnect();
           const description = document.getElementById('inkling-description');
           description.innerHTML = descriptionObject.description;
@@ -75,6 +88,7 @@ function startDescriptionObserver() {
 
 chrome.runtime.onMessage.addListener((message) => {
   if (message.type === "startObserver") {
+    resetState();
     placeContainerOnPage();
     startDescriptionObserver();
   }
@@ -99,4 +113,14 @@ const getDescriptionFromPage = () => {
   }
 
   return descriptionObject;
+}
+
+
+const resetState = () => {
+  if (observer) {
+    observer.disconnect();
+  }
+  if (descriptionObserver) {
+    descriptionObserver.disconnect();
+  }
 }
