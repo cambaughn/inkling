@@ -5,18 +5,32 @@ import "./Content.css";
 import { useEffect, useState } from "react";
 import ButtonRow from "./ButtonRow/ButtonRow";
 import Description from "./Description/Description";
+import classNames from "classnames";
 // Util
 import { getVideoDetails, getYouTubeSubtitles } from "../util/youTube";
 import { getSummary } from "../util/openAI";
 
 
 function Content() {
+  const [isVisible, setIsVisible] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [videoId, setVideoId] = useState('');
   const [activeTab, setActiveTab] = useState(0);
   const [videoDescription, setVideoDescription] = useState({});
   const [videoDetails, setVideoDetails] = useState(null);
   const [subtitles, setSubtitles] = useState('');
   const [videoSummary, setVideoSummary] = useState('');
+
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsVisible(true);
+    }, 1000);
+  }, []);
+
+  const handleBarClick = () => {
+    setIsExpanded(!isExpanded);
+  };
 
   // Whenever the videoId changes, get the new video details
   useEffect(() => {
@@ -123,9 +137,11 @@ function Content() {
   }, []);
 
   return (
-    <div id="inkling">
-      <ButtonRow tabs={tabs} activeTab={activeTab} onChangeTab={handleChangeTab} key="inkling-button-row" />
-      <Description currentTab={tabs[activeTab]} videoSummary={videoSummary} videoDescription={videoDescription} key="inkling-description" />
+    <div className={classNames('inkling-content', { visible: isVisible, expanded: isExpanded })}>
+    <div className="topBar" onClick={handleBarClick}></div>
+    Testing
+      {/* <ButtonRow tabs={tabs} activeTab={activeTab} onChangeTab={handleChangeTab} key="inkling-button-row" />
+      <Description currentTab={tabs[activeTab]} videoSummary={videoSummary} videoDescription={videoDescription} key="inkling-description" /> */}
     </div>
   );
 }
