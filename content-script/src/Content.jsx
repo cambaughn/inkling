@@ -28,6 +28,8 @@ function Content() {
 
     testSummary = "The main topic of the video is testing the new medium format Kodak Gold film, specifically pushing it to ISO 1600 to see the results compared to the same stock shot at box speed. The video includes sample photos and a comparison of scans and hand prints using various scanners. \nMain points: \n- Received the new medium format Kodak Gold thanks to Cape Film Supply \n- Testing how the film performs when pushed to ISO 1600 \n- Some technical terms defined (e.g. \"pushing,\" \"pulling\") \n- Scanning and printing options discussed \n- Thinness of negatives discussed and potential impact \n- Results of pushing the film to ISO 1600 noted, including increased contrast, more saturation, and color shifts"
 
+    testSummary += "\n- Received the new medium format Kodak Gold thanks to Cape Film Supply \n- Testing how the film performs when pushed to ISO 1600 \n- Some technical terms defined (e.g. \"pushing,\" \"pulling\") \n- Scanning and printing options discussed \n- Thinness of negatives discussed and potential impact \n- Results of pushing the film to ISO 1600 noted, including increased contrast, more saturation, and color shifts"
+
     setTimeout(() => {
       setVideoSummary(testSummary);
     }, 1000)}, []);

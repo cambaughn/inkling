@@ -33,7 +33,6 @@ function TextContent({ currentTab, videoSummary }) {
       <div 
       className="textContentInner"
       ref={divRef}
-      style={{ maxHeight: '200px', overflowY: 'scroll' }}
       onScroll={handleScroll}
       >
         {currentTab === 'Summary' && videoSummary.length === 0 &&
@@ -44,9 +43,11 @@ function TextContent({ currentTab, videoSummary }) {
         }
 
         {currentTab === 'Summary' && videoSummary.length > 0 &&
-          <Linkify>
-            {videoSummary}
-          </Linkify>
+          <>
+            {videoSummary.split('\n').map((line, index) => (
+              <div key={index}>{line}</div>
+            ))}
+          </>
         }
       </div>
 

@@ -10,7 +10,6 @@
   height: 100%;
   box-sizing: border-box;
   overflow-y: scroll;
-  padding-top: 10px;
   padding-bottom: 30px;
 }
 
@@ -24,13 +23,14 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 20px; /* Adjust the height of the gradient as needed */
+  height: 25px; /* Adjust the height of the gradient as needed */
   background: linear-gradient(to top, transparent, rgba(0, 0, 0, 1));
+  transition: opacity 0.3s ease;
 }
 
 .bottomGradient {
   position: absolute;
-  bottom: 20px;
+  bottom: 0px;
   left: 0;
   width: 100%;
   height: 30px; /* Adjust the height of the gradient as needed */
