@@ -5,6 +5,7 @@ import "./Content.css";
 import { useEffect, useState } from "react";
 import ButtonRow from "./ButtonRow/ButtonRow";
 import Description from "./Description/Description";
+import PreviewBar from "./PreviewBar/PreviewBar";
 import classNames from "classnames";
 // Util
 import { getVideoDetails, getYouTubeSubtitles } from "../util/youTube";
@@ -25,6 +26,7 @@ function Content() {
   useEffect(() => {
     setTimeout(() => {
       setIsVisible(true);
+      setVideoSummary("In this video, we go over the technical details of the Red Epic camera. The Red Epic is a high-end digital cinema camera known for its exceptional image quality and advanced features. We dive deep into its specifications, exploring the camera's sensor resolution, dynamic range, and color science. We discuss the various recording formats and frame rates supported by the Red Epic, as well as its workflow and post-production requirements. Whether you're a professional cinematographer or an enthusiast interested in filmmaking, this video provides an in-depth analysis of the Red Epic camera's technical capabilities.");
     }, 1000);
   }, []);
 
@@ -138,7 +140,9 @@ function Content() {
 
   return (
     <div className={classNames('inkling-content', { visible: isVisible, expanded: isExpanded })}>
-    <div className="topBar" onClick={handleBarClick}></div>
+    <div onClick={handleBarClick}>
+      <PreviewBar textContent={videoSummary} isExpanded={isExpanded} />
+    </div>
     Testing
       {/* <ButtonRow tabs={tabs} activeTab={activeTab} onChangeTab={handleChangeTab} key="inkling-button-row" />
       <Description currentTab={tabs[activeTab]} videoSummary={videoSummary} videoDescription={videoDescription} key="inkling-description" /> */}
