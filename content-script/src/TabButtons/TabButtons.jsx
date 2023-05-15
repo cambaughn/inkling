@@ -1,7 +1,7 @@
 import React from 'react';
-import './ButtonRow.css';
+import './TabButtons.css';
 
-const ButtonRow = ({ tabs, activeTab, onChangeTab }) => {
+const TabButtons = ({ tabs, activeTab, onChangeTab }) => {
   let logoUrl = chrome?.runtime ? chrome.runtime.getURL('logo.png') : 'logo.png';
 
   return (
@@ -31,4 +31,4 @@ const ButtonRow = ({ tabs, activeTab, onChangeTab }) => {
   );
 };
 
-export default ButtonRow;
+export default TabButtons;

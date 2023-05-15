@@ -2,9 +2,9 @@ import React from 'react';
 import classNames from 'classnames';
 import './PreviewBar.css';
 
-const PreviewBar = ({ textContent, isExpanded }) => {
+const PreviewBar = ({ textContent, isExpanded, handleClick }) => {
   return (
-    <div className={'preview-bar'}>
+    <div className={'preview-bar'} onClick={handleClick}>
       {!isExpanded &&
         <div className={'previewContent'}>
           <img src={chrome.runtime.getURL('expand_up.svg')} />

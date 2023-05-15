@@ -3,7 +3,7 @@
 
 import "./Content.css";
 import { useEffect, useState } from "react";
-import ButtonRow from "./ButtonRow/ButtonRow";
+import TabButtons from "./TabButtons/TabButtons";
 import Description from "./Description/Description";
 import PreviewBar from "./PreviewBar/PreviewBar";
 import classNames from "classnames";
@@ -17,18 +17,16 @@ function Content() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [videoId, setVideoId] = useState('');
   const [activeTab, setActiveTab] = useState(0);
-  const [videoDescription, setVideoDescription] = useState({});
   const [videoDetails, setVideoDetails] = useState(null);
   const [subtitles, setSubtitles] = useState('');
   const [videoSummary, setVideoSummary] = useState('');
 
+  const tabs = ['Inkling', 'Description'];
 
-  useEffect(() => {
-    setTimeout(() => {
-      setIsVisible(true);
-      setVideoSummary("In this video, we go over the technical details of the Red Epic camera. The Red Epic is a high-end digital cinema camera known for its exceptional image quality and advanced features. We dive deep into its specifications, exploring the camera's sensor resolution, dynamic range, and color science. We discuss the various recording formats and frame rates supported by the Red Epic, as well as its workflow and post-production requirements. Whether you're a professional cinematographer or an enthusiast interested in filmmaking, this video provides an in-depth analysis of the Red Epic camera's technical capabilities.");
-    }, 1000);
-  }, []);
+  const handleChangeTab = (tabIndex) => {
+    setActiveTab(tabIndex);
+  };
+
 
   const handleBarClick = () => {
     setIsExpanded(!isExpanded);
@@ -47,6 +45,7 @@ function Content() {
     }
 
     if (videoId && !videoDetails && !subtitles) {
+      console.log('fetching video details');
       fetchVideoDetails();
       fetchSubtitles();
     }
@@ -60,57 +59,14 @@ function Content() {
     }    
 
     if (videoDetails && subtitles && !videoSummary) {
+      console.log('fetching summary')
       fetchSummary();
     }
   }, [videoDetails, subtitles]);
 
-  // Get the video description and details from the page - so we don't have to format the raw data from the API
-  useEffect(() => {
-    const descriptionObject = {};
-  
-    // Create a function to update the description object
-    const updateDescriptionObject = () => {
-      const boldTextElements = document.querySelectorAll('.style-scope.yt-formatted-string.bold');
-      const boldTextContentArray = Array.from(boldTextElements).map(element => element.textContent.trim()).filter(text => !!text.length);
-      descriptionObject.details = boldTextContentArray;
-  
-      // Get the main description
-      const descriptionElement = document.querySelector('.yt-core-attributed-string.yt-core-attributed-string--white-space-pre-wrap');
-      if (descriptionElement) {
-        descriptionObject.description = descriptionElement.textContent;
-      }
-  
-      setVideoDescription(descriptionObject);
-    };
-  
-    // Create a new MutationObserver and observe the body for changes
-    const observer = new MutationObserver(updateDescriptionObject);
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-      characterData: true,
-    });
-  
-    // Call the update function initially to populate the state
-    updateDescriptionObject();
-  
-    // Return a cleanup function to disconnect the observer
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
-  
-
-  const tabs = ['Inkling', 'Description'];
-
-  const handleChangeTab = (tabIndex) => {
-    setActiveTab(tabIndex);
-  };
-
+  // Reset state when videoId changes
   const resetState = () => {
     setActiveTab(0);
-    setVideoDescription({});
-    setVideoDetails(null);
     setSubtitles('');
     setVideoSummary('');
   };
@@ -132,20 +88,17 @@ function Content() {
     };
   }, []);
 
-  // In your Content.js file
   useEffect(() => {
     // Send a message to the background script when the component has mounted
     chrome.runtime.sendMessage({ type: 'contentScriptMounted' });
   }, []);
 
   return (
-    <div className={classNames('inkling-content', { visible: isVisible, expanded: isExpanded })}>
-    <div onClick={handleBarClick}>
-      <PreviewBar textContent={videoSummary} isExpanded={isExpanded} />
-    </div>
-    Testing
-      {/* <ButtonRow tabs={tabs} activeTab={activeTab} onChangeTab={handleChangeTab} key="inkling-button-row" />
-      <Description currentTab={tabs[activeTab]} videoSummary={videoSummary} videoDescription={videoDescription} key="inkling-description" /> */}
+    <div className={classNames('inkling-content', { visible: videoSummary?.length, expanded: isExpanded })}>
+      <PreviewBar textContent={videoSummary} isExpanded={isExpanded} handleClick={handleBarClick} />
+
+    {/* <TabButtons tabs={tabs} activeTab={activeTab} onChangeTab={handleChangeTab} key="inkling-button-row" /> */}
+    {/* <Description currentTab={tabs[activeTab]} videoSummary={videoSummary} videoDescription={videoDescription} key="inkling-description" /> */}
     </div>
   );
 }
