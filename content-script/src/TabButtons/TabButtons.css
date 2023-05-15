@@ -3,32 +3,22 @@
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
+  gap: 20px;
 }
 
 .inklingButton {
-  align-items: center;
-  padding-left: 20px;
-  padding-right: 20px;
-  height: 36px;
-  box-sizing: border-box;
-  background-color: #272727;
-  color: white;
   border-radius: 20px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
+  opacity: 1;
+  transition: background-color 0.3s ease, opacity 0.3s ease;
 }
 
 .inklingButton:hover {
-  background-color: #3f3f3f !important;
+  /* background-color: #3f3f3f !important; */
+  opacity: 0.8;
 }
 
-.logoSmall {
-  margin-right: 5px;
-  width: 15px;
-  height: 15px;
+.inklingButton.active {
+  color: var(--inkling-color);
+  /* font-weight: bold; */
 }

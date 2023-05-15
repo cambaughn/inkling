@@ -4,7 +4,7 @@
 import "./Content.css";
 import { useEffect, useState } from "react";
 import TabButtons from "./TabButtons/TabButtons";
-import Description from "./Description/Description";
+import TextContent from "./TextContent/TextContent";
 import PreviewBar from "./PreviewBar/PreviewBar";
 import classNames from "classnames";
 // Util
@@ -13,15 +13,22 @@ import { getSummary } from "../util/openAI";
 
 
 function Content() {
-  const [isVisible, setIsVisible] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
   const [videoId, setVideoId] = useState('');
   const [activeTab, setActiveTab] = useState(0);
   const [videoDetails, setVideoDetails] = useState(null);
   const [subtitles, setSubtitles] = useState('');
   const [videoSummary, setVideoSummary] = useState('');
 
-  const tabs = ['Inkling', 'Description'];
+  const tabs = ['Summary'];
+
+  useEffect(() => {
+    let testSummary = "The video covers the Binstax Mamiya RB67 Fuji Instax adapter, which allows the user to take instant square format photos with their Mamiya RB67 camera. The adapter is a mechanical device that is fully mechanical and compact in size. There is no rotation like the rotating backs on Mamiya cameras, but it still has a dark slide holder, a viewfinder, and a winder. It is a great tool for making instant photos on set or when creating close-up shots, and it allows for the use of lower shutter speeds on the Mamiya RB67. The adapter can be loaded with Fujifilm Instax Square film, and it can be attached directly to the rotating back of the Mamiya RB67. There are some minor issues with the adapter, such as the placement of the crank, and the possibility of accidentally opening the film door when inserting the dark slide. Despite this, it is a fun addition to the Mamiya RB67 camera and produces great quality instant photos."
+    testSummary = testSummary + "The video covers the Binstax Mamiya RB67 Fuji Instax adapter, which allows the user to take instant square format photos with their Mamiya RB67 camera. The adapter is a mechanical device that is fully mechanical and compact in size. There is no rotation like the rotating backs on Mamiya cameras, but it still has a dark slide holder, a viewfinder, and a winder. It is a great tool for making instant photos on set or when creating close-up shots, and it allows for the use of lower shutter speeds on the Mamiya RB67. The adapter can be loaded with Fujifilm Instax Square film, and it can be attached directly to the rotating back of the Mamiya RB67. There are some minor issues with the adapter, such as the placement of the crank, and the possibility of accidentally opening the film door when inserting the dark slide. Despite this, it is a fun addition to the Mamiya RB67 camera and produces great quality instant photos."
+
+    setTimeout(() => {
+      setVideoSummary(testSummary);
+    }, 1000)});
 
   const handleChangeTab = (tabIndex) => {
     setActiveTab(tabIndex);
@@ -52,21 +59,23 @@ function Content() {
   }, [videoId]);
 
   // When videoDetails and subtitles are available, send them to openAI for the summary 
-  useEffect(() => {
-    async function fetchSummary() {
-      const gptSummary = await getSummary(videoDetails, subtitles);
-      setVideoSummary(gptSummary);
-    }    
+  // useEffect(() => {
+  //   async function fetchSummary() {
+  //     const gptSummary = await getSummary(videoDetails, subtitles);
+  //     console.log('summary', gptSummary);
+  //     setVideoSummary(gptSummary);
+  //   }    
 
-    if (videoDetails && subtitles && !videoSummary) {
-      console.log('fetching summary')
-      fetchSummary();
-    }
-  }, [videoDetails, subtitles]);
+  //   if (videoDetails && subtitles && !videoSummary) {
+  //     console.log('fetching summary')
+  //     fetchSummary();
+  //   }
+  // }, [videoDetails, subtitles]);
 
   // Reset state when videoId changes
   const resetState = () => {
     setActiveTab(0);
+    setVideoDetails(null);
     setSubtitles('');
     setVideoSummary('');
   };
@@ -97,8 +106,10 @@ function Content() {
     <div className={classNames('inkling-content', { visible: videoSummary?.length, expanded: isExpanded })}>
       <PreviewBar textContent={videoSummary} isExpanded={isExpanded} handleClick={handleBarClick} />
 
-    {/* <TabButtons tabs={tabs} activeTab={activeTab} onChangeTab={handleChangeTab} key="inkling-button-row" /> */}
-    {/* <Description currentTab={tabs[activeTab]} videoSummary={videoSummary} videoDescription={videoDescription} key="inkling-description" /> */}
+      <div className="mainContent">
+        <TabButtons tabs={tabs} activeTab={activeTab} onChangeTab={handleChangeTab} />
+        <TextContent currentTab={tabs[activeTab]} videoSummary={videoSummary} />
+      </div>
     </div>
   );
 }

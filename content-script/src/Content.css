@@ -1,6 +1,7 @@
 :root {
   --content-height: 300px;
   --preview-height: 50px;
+  --inkling-color: #21FD5E;
 }
 
 .inkling-content {
@@ -10,15 +11,18 @@
   width: 100vw;
   height: var(--content-height);
   background-color: black;
-  color: white;
+  color: #CCCCCC;
+  font-weight: 500;
+  font-size: 14px;
+  font-family: "Roboto", "Arial", sans-serif;
   transition: transform 0.3s ease-in-out, height 0.3s ease-in-out;
   transform: translateY(100%);
   cursor: pointer;
   z-index: 9999 !important;
   display: flex;
   flex-direction: column;
+  align-items: center;
   justify-content: flex-start;
-  font-size: 15px;
 }
 
 .inkling-content.visible {
@@ -29,32 +33,13 @@
   transform: translateY(0%);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.mainContent {
+  width: 60vw;
+  height: calc(var(--content-height) - var(--preview-height));
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  align-items: flex-start;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  gap: 10px;
 }
