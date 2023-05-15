@@ -11,7 +11,7 @@
   box-sizing: border-box;
   overflow-y: scroll;
   padding-top: 10px;
-  padding-bottom: 50px;
+  padding-bottom: 30px;
 }
 
 .descriptionContainer a {
@@ -26,12 +26,11 @@
   width: 100%;
   height: 20px; /* Adjust the height of the gradient as needed */
   background: linear-gradient(to top, transparent, rgba(0, 0, 0, 1));
-  transition: opacity 0.3s ease-in-out;
 }
 
 .bottomGradient {
   position: absolute;
-  bottom: 0;
+  bottom: 20px;
   left: 0;
   width: 100%;
   height: 30px; /* Adjust the height of the gradient as needed */

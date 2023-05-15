@@ -17,7 +17,6 @@
   font-family: "Roboto", "Arial", sans-serif;
   transition: transform 0.3s ease-in-out, height 0.3s ease-in-out;
   transform: translateY(100%);
-  cursor: pointer;
   z-index: 9999 !important;
   display: flex;
   flex-direction: column;

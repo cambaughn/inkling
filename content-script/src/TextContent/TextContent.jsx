@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import classNames from "classnames";
 import './TextContent.css';
 import Linkify from 'react-linkify';
 import { getLoadingText } from "./util";
