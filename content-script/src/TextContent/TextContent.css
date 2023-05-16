@@ -13,6 +13,10 @@
   padding-bottom: 30px;
 }
 
+.textContentInner::-webkit-scrollbar {
+  display: none;
+}
+
 .descriptionContainer a {
   color: #3C9DEF;
 }

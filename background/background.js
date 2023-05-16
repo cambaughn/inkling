@@ -11,7 +11,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
     if (videoId) {
       chrome.tabs.sendMessage(tabId, { type: 'videoId', data: videoId });
     } else {
-      
+      chrome.tabs.sendMessage(tabId, { type: 'videoId', data: null });
     }
   }
 });

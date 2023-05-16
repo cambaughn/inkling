@@ -67,7 +67,9 @@ function Content() {
     async function fetchSummary() {
       const gptSummary = await getSummary(videoDetails, subtitles);
       console.log('summary', gptSummary);
-      setVideoSummary(gptSummary);
+      if (gptSummary) {
+        setVideoSummary(gptSummary);
+      }
     }    
 
     if (videoDetails && subtitles && !videoSummary) {
