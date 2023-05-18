@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import TabButtons from "./TabButtons/TabButtons";
 import TextContent from "./TextContent/TextContent";
 import PreviewBar from "./PreviewBar/PreviewBar";
+import Loading from "./Loading/Loading";
 import classNames from "classnames";
 // Util
 import { getVideoDetails, getYouTubeSubtitles } from "../util/youTube";
@@ -19,6 +20,7 @@ function Content() {
   const [videoDetails, setVideoDetails] = useState(null);
   const [subtitles, setSubtitles] = useState('');
   const [videoSummary, setVideoSummary] = useState('');
+  const [error, setError] = useState(null);
 
   const tabs = ['Summary'];
 
@@ -69,6 +71,9 @@ function Content() {
       console.log('summary', gptSummary);
       if (gptSummary) {
         setVideoSummary(gptSummary);
+        setError('There was an error generating the summary. Please try again.');
+      } else {
+        setError('There was an error generating the summary. Please try again.');
       }
     }    
 
@@ -110,6 +115,7 @@ function Content() {
 
   return (
     <div className={classNames('inkling-content', { visible: videoSummary?.length, expanded: isExpanded })}>
+      <Loading loading={!videoSummary && !error} error={error} />
       <PreviewBar textContent={videoSummary} isExpanded={isExpanded} handleClick={handleBarClick} />
 
       <div className="mainContent">
