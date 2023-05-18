@@ -13,7 +13,7 @@
   "content_scripts": [
     {
       "run_at" : "document_start",
-      "js": ["content-script/before.js"],
+      "js": ["content-script/src/main.jsx"],
       "matches": [
         "https://www.youtube.com/*",
         "http://www.youtube.com/*"
@@ -21,7 +21,7 @@
     },
     {
       "run_at" : "document_idle",
-      "js": ["content-script/src/main.jsx"],
+      "js": ["content-script/before.js"],
       "matches": [
         "https://www.youtube.com/*",
         "http://www.youtube.com/*"
