@@ -16,7 +16,10 @@ const SpinnerIcon = () => (
 );
 
 const ErrorIcon = () => (
-  <FiAlertCircle className="icon error-icon" />
+  <div className="tooltip">
+    <FiAlertCircle className="icon error-icon" />
+    <span className="tooltipText">There was an error generating the summary. Please try again.</span>
+  </div>
 );
 
 export default Loading;

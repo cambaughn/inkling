@@ -27,3 +27,30 @@
     transform: rotate(360deg);
   }
 }
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip .tooltipText {
+  visibility: hidden;
+  width: max-content;
+  background-color: #000;
+  color: #fff;
+  text-align: center;
+  padding: 5px;
+  border-radius: 4px;
+  position: absolute;
+  top: 50%;
+  left: calc(100% + 10px); /* Adjust the spacing as needed */
+  transform: translateY(-50%);
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltipText {
+  visibility: visible;
+  opacity: 1;
+}
