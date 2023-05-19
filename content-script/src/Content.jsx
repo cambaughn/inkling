@@ -20,6 +20,7 @@ function Content() {
   const [videoDetails, setVideoDetails] = useState(null);
   const [subtitles, setSubtitles] = useState('');
   const [videoSummary, setVideoSummary] = useState('');
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const tabs = ['Summary'];
@@ -67,14 +68,15 @@ function Content() {
   // When videoDetails and subtitles are available, send them to openAI for the summary 
   useEffect(() => {
     async function fetchSummary() {
+      setLoading(true);
       const gptSummary = await getSummary(videoDetails, subtitles);
       console.log('summary', gptSummary);
       if (gptSummary) {
         setVideoSummary(gptSummary);
-        setError('There was an error generating the summary. Please try again.');
       } else {
         setError('There was an error generating the summary. Please try again.');
       }
+      setLoading(false);
     }    
 
     if (videoDetails && subtitles && !videoSummary) {
@@ -115,7 +117,7 @@ function Content() {
 
   return (
     <div className={classNames('inkling-content', { visible: videoSummary?.length, expanded: isExpanded })}>
-      <Loading loading={!videoSummary && !error} error={error} />
+      <Loading loading={loading} error={error} />
       <PreviewBar textContent={videoSummary} isExpanded={isExpanded} handleClick={handleBarClick} />
 
       <div className="mainContent">

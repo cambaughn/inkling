@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Inkling",
-  "version": "1.4",
+  "version": "1.5",
   "actions": {
     "default_title": "Popup",
     "default_popup": "index.html",
@@ -39,8 +39,7 @@
     ]
   },
   "permissions": [
-    "tabs",
-    "runtime"
+    "tabs"
   ],
   "web_accessible_resources": [
     {
