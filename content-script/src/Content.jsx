@@ -10,7 +10,7 @@ import Loading from "./Loading/Loading";
 import classNames from "classnames";
 // Util
 import { getVideoDetails, getYouTubeSubtitles } from "../util/youTube";
-import { getSummary } from "../util/openAI";
+import { getSummary, getCommentsSummary } from "../util/openAI";
 
 
 function Content() {
@@ -93,6 +93,7 @@ function Content() {
     setVideoDetails(null);
     setSubtitles('');
     setVideoSummary('');
+    setCommentsSummary('');
   };
 
   // Listen for messages from background.js
@@ -116,6 +117,57 @@ function Content() {
     // Send a message to the background script when the component has mounted
     chrome.runtime.sendMessage({ type: 'contentScriptMounted' });
   }, []);
+
+
+  // Get comments summary when videoId changes
+
+const fetchCommentsSummary = async (comments) => {
+  console.log('commentsText === ', comments);
+  const summary = await getCommentsSummary(comments);
+  console.log('comments summary', summary);
+  setCommentsSummary(summary);
+};
+
+useEffect(() => {
+  let gotSummary = false;
+
+  const observerCallback = (mutationsList) => {
+    for (const mutation of mutationsList) {
+      if (mutation.type === 'childList') {
+        const comments = Array.from(
+          document.querySelectorAll('#content-text')
+        ).slice(0, 20);
+        const commentsText = comments.map((comment) => comment.textContent);
+
+        if (comments.length > 10 && !gotSummary) {
+          gotSummary = true;
+          fetchCommentsSummary(commentsText);
+          break;
+        }
+      }
+    }
+  };
+
+  const observer = new MutationObserver(observerCallback);
+  const targetNode = document.body;
+
+  const observeComments = () => {
+    observer.observe(targetNode, {
+      childList: true,
+      subtree: true,
+    });
+  };
+
+  // Wait for 500 milliseconds before observing comments
+  const timeoutId = setTimeout(observeComments, 500);
+
+  return () => {
+    clearTimeout(timeoutId);
+    observer.disconnect();
+  };
+}, [videoId]);
+
+
 
   return (
     <div className={classNames('inkling-content', { visible: videoSummary?.length && videoId, expanded: isExpanded })}>

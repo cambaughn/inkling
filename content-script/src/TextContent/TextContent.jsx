@@ -5,7 +5,7 @@ import Linkify from 'react-linkify';
 import { getLoadingText } from "./util";
 
 
-function TextContent({ currentTab, videoSummary }) {
+function TextContent({ currentTab, videoSummary, commentsSummary }) {
   const [loadingText, setLoadingText] = useState('');
   const [scrolled, setScrolled] = useState(false);
   const divRef = useRef(null);
@@ -45,7 +45,15 @@ function TextContent({ currentTab, videoSummary }) {
         {currentTab === 'Summary' && videoSummary.length > 0 &&
           <>
             {videoSummary.split('\n').map((line, index) => (
-              <div key={index}>{line}</div>
+              <div key={`videoSummary-${index}`}>{line}</div>
+            ))}
+          </>
+        }        
+        
+        {currentTab === 'Comments' && commentsSummary.length > 0 &&
+          <>
+            {commentsSummary.split('\n').map((line, index) => (
+              <div key={`comment-${index}`}>{line}</div>
             ))}
           </>
         }

@@ -37,4 +37,43 @@ const getSummary = async (videoDetails, subtitles) => {
   }
 };
 
-export { getSummary }
+const getCommentsSummary = async (comments) => {
+  const OPENAI_API_KEY = chrome.runtime.getManifest().env.OPENAI_API_KEY;
+
+  const configuration = new Configuration({
+    apiKey: OPENAI_API_KEY,
+  });
+  const openai = new OpenAIApi(configuration);
+
+  try {
+    const prompt = `Please provide a summary of the comments and their main points: \n\n- Comments: ${comments.join(
+      ", "
+    )}`;
+
+    const messages = [
+      {
+        role: "system",
+        content:
+          "You're a research assistant designed to help users get the most important information out of comments. Analyze the comments and summarize their main points.",
+      },
+      { role: "user", content: prompt },
+    ];
+
+    const openAiResponse = await openai.createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages,
+    });
+
+    const responseText = openAiResponse?.data?.choices[0].message?.content;
+
+    return responseText;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+
+
+
+export { getSummary, getCommentsSummary }
