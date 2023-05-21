@@ -69,6 +69,7 @@ function Content() {
   useEffect(() => {
     async function fetchSummary() {
       setLoading(true);
+      setError(null);
       const gptSummary = await getSummary(videoDetails, subtitles);
       console.log('summary', gptSummary);
       if (gptSummary) {
