@@ -38,22 +38,6 @@ function Content() {
     toggleExpansion();
   };
 
-  const handleKeyDown = (event) => {
-    if (event.key === 'e') {
-      console.log('e pressed ======= ');
-    }
-    if (event.key === 'e' && videoSummary.length > 0) {
-      toggleExpansion();
-    }
-  };
-
-  useEffect(() => {
-    window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, []);
-
   // Whenever the videoId changes, get the new video details
   useEffect(() => {
     async function fetchVideoDetails() {
