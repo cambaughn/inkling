@@ -93,7 +93,7 @@ function Content() {
   useEffect(() => {
     async function fetchExploreDetails() {
       const exploreResponse = await getExploreDetails(videoSummary);
-      console.log('explore response', exploreResponse);
+
       if (exploreResponse) {
         setExploreDetails(exploreResponse);
       }

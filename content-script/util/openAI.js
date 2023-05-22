@@ -3,40 +3,84 @@ import { sliceStringToRange } from './string';
 
 const getSummary = async (videoDetails, subtitles) => {
   const OPENAI_API_KEY = chrome.runtime.getManifest().env.OPENAI_API_KEY;
-  
+
   const configuration = new Configuration({
     apiKey: OPENAI_API_KEY,
   });
   const openai = new OpenAIApi(configuration);
 
+  const splitTextIntoChunks = (text, chunkSize) => {
+    if (text) {
+      const regex = new RegExp(`^(.{1,${chunkSize}}[.!?,])\\s`);
+      const matches = text.match(regex);
+      if (matches) {
+        const [chunk, remainingText] = matches.slice(1);
+        const rest = splitTextIntoChunks(remainingText, chunkSize);
+        return [chunk, ...rest];
+      }
+    }
+    return [text];
+  };
+  
+
+  const summarizeChunks = async (chunks) => {
+    const summaries = [];
+    for (const chunk of chunks) {
+      const prompt = `Please provide a 2-3 sentence summary of the following text:\n\n${chunk}`;
+
+      const messages = [
+        {
+          role: 'system',
+          content:
+            "You're a research assistant designed to help users get the most important content out of videos in the shortest time possible.",
+        },
+        { role: 'user', content: prompt },
+      ];
+
+      console.log('Sending chunk to OpenAI:', chunk);
+      const openAiResponse = await openai.createChatCompletion({
+        model: 'gpt-3.5-turbo',
+        messages,
+      });
+
+      const responseText = openAiResponse?.data?.choices[0].message?.content;
+      console.log('Received summary:', responseText);
+      summaries.push(responseText);
+    }
+    return summaries;
+  };
+
   try {
     const videoTitle = videoDetails?.snippet?.title;
     const videoDescription = videoDetails?.snippet?.description;
 
-    const prompt = `Please provide a 2-3 sentence summary of the main topic of the video, followed by bullet pointed list of the main points. - Title: ${videoTitle}, - Description: ${videoDescription} - Transcript: ${subtitles}`;
+    const fullText = `${videoTitle} ${videoDescription} ${subtitles}`;
 
-    const messages = [
-      {
-        role: 'system',
-        content:
-          "You're a research assistant designed to help users get the most important content out of videos in the shortest time possible. These videos can consist of a title, description, and transcript. Be aware that the description can contain product links, advertisements, sponsors, and other content that isn't directly relevant to the content of the video itself. Use it to educate yourself about the content of the video, but don't hold it in high regard, and don't return any sponsored or irrelevant content.",
-      },
-      { role: 'user', content: prompt },
-    ];
+    const chunkSize = 2500;
+    const chunks = splitTextIntoChunks(fullText, chunkSize).filter(chunk => !!chunk);
 
-    const openAiResponse = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo",
-      messages
-    });
+    console.log('Original text:', fullText);
+    console.log('Split into chunks:', chunks);
 
-    const responseText = openAiResponse?.data?.choices[0].message?.content;
+    let summaries = await summarizeChunks(chunks);
 
-    return responseText;
+    while (summaries.length > 1) {
+      console.log('Summarizing chunks:', summaries);
+      summaries = await summarizeChunks(summaries);
+    }
+
+    const finalSummary = summaries[0];
+    console.log('Final summary:', finalSummary);
+
+    return finalSummary;
   } catch (error) {
+    console.log('error ', error)
     console.error(error);
     return null;
   }
 };
+
+
 
 const getExploreDetails = async (summary) => {
   const OPENAI_API_KEY = chrome.runtime.getManifest().env.OPENAI_API_KEY;
