@@ -5,8 +5,6 @@ import App from "./App.jsx";
 
 console.log("Hello from main.jsx!");
 
-createRoot(document.getElementById("inkling-popup-root")!).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+createRoot(document.getElementById("root")!).render(
+  <App />
 );
