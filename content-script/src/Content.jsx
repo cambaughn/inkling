@@ -70,11 +70,18 @@ function Content() {
         setError('There was an error generating the summary. Please try again.');
       }
       setLoading(false);
-    }    
+    }
 
-    if (videoDetails && subtitles && !videoSummary) {
+    console.log(videoDetails);
+
+    let length = videoDetails?.contentDetails?.lengthInHours;
+
+    if (videoDetails && subtitles && !videoSummary && length < 2) {
       console.log('fetching summary')
       fetchSummary();
+    } else if (length >= 2) {
+      console.log('video too long');
+      setError('This video is too long to summarize. Please try a video that is less than 2 hours long.');
     }
   }, [videoDetails, subtitles]);
 
