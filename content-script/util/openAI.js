@@ -77,7 +77,6 @@ const getSummary = async (videoDetails, subtitles) => {
       });
 
       const responseText = openAiResponse?.data?.choices[0].message?.content;
-      console.log('Received summary:', responseText);
       summaries.push(responseText);
     }
 
@@ -93,25 +92,17 @@ const getSummary = async (videoDetails, subtitles) => {
     const chunkSize = 14000;
     const chunks = splitTextIntoChunks(fullText, chunkSize).filter(chunk => !!chunk);
 
-    // console.log('Original text:', fullText);
-    console.log('Split into chunks:', chunks);
-
     let summaries = await summarizeChunks(chunks);
-    console.log('Summaries length:', summaries.length);
 
     while (summaries.length > 1) {
       summaries = combineStrings(summaries, chunkSize);
-      console.log('Summaries length:', summaries.length);
-      // console.log('Summarizing chunks:', summaries);
       summaries = await summarizeChunks(summaries);
     }
 
     const finalSummary = summaries[0];
-    console.log('Final summary:', finalSummary);
-
+    
     return finalSummary;
   } catch (error) {
-    console.log('error ', error)
     console.error(error);
     return null;
   }

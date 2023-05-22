@@ -73,7 +73,7 @@ function Content() {
       setLoading(true);
       setError(null);
       const gptSummary = await getSummary(videoDetails, subtitles);
-      console.log('summary', gptSummary);
+
       if (gptSummary) {
         setVideoSummary(gptSummary);
       } else {
