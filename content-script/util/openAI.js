@@ -1,4 +1,5 @@
 import { Configuration, OpenAIApi } from 'openai';
+import { sliceStringToRange } from './string';
 
 const getSummary = async (videoDetails, subtitles) => {
   const OPENAI_API_KEY = chrome.runtime.getManifest().env.OPENAI_API_KEY;
@@ -36,6 +37,41 @@ const getSummary = async (videoDetails, subtitles) => {
     return null;
   }
 };
+
+const getExploreDetails = async (summary) => {
+  const OPENAI_API_KEY = chrome.runtime.getManifest().env.OPENAI_API_KEY;
+
+  const configuration = new Configuration({
+    apiKey: OPENAI_API_KEY,
+  });
+  const openai = new OpenAIApi(configuration);
+
+  try {
+    const prompt = `Based on the video's content, provide some relevant links and resources for further exploration. Video summary: ${summary}`;
+
+    const messages = [
+      {
+        role: 'system',
+        content:
+          "You're a research assistant designed to help users further research the content of YouTube videos by providing links to other websites and articles.",
+      },
+      { role: 'user', content: prompt },
+    ];
+
+    const openAiResponse = await openai.createChatCompletion({
+      model: 'gpt-3.5-turbo',
+      messages,
+    });
+
+    const responseText = openAiResponse?.data?.choices[0].message?.content;
+
+    return responseText;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
 
 const getCommentsSummary = async (comments) => {
   const OPENAI_API_KEY = chrome.runtime.getManifest().env.OPENAI_API_KEY;
@@ -76,4 +112,4 @@ const getCommentsSummary = async (comments) => {
 
 
 
-export { getSummary, getCommentsSummary }
+export { getSummary, getCommentsSummary, getExploreDetails }

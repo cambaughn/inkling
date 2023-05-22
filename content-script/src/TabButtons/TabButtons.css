@@ -14,11 +14,14 @@
 }
 
 .inklingButton:hover {
-  /* background-color: #3f3f3f !important; */
-  opacity: 0.8;
+
 }
 
 .inklingButton.active {
   color: var(--inkling-color);
   /* font-weight: bold; */
+}
+
+.invisible {
+  opacity: 0;
 }
