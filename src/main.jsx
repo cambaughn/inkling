@@ -5,6 +5,6 @@ import App from "./App.jsx";
 
 console.log("Hello from main.jsx!");
 
-createRoot(document.getElementById("root")!).render(
+createRoot(document.getElementById("inkling-popup-container")!).render(
   <App />
 );
