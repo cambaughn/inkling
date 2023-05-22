@@ -60,7 +60,7 @@ const getSummary = async (videoDetails, subtitles) => {
   const summarizeChunks = async (chunks) => {
     const summaries = [];
     for (const chunk of chunks) {
-      const prompt = `Please provide a 2-3 sentence summary of the following text:\n\n${chunk}`;
+      const prompt = `Please provide a 2-3 sentence summary of the main topic of the video, followed by bullet pointed list of the main points:\n\n${chunk}`;
 
       const messages = [
         {
@@ -71,7 +71,6 @@ const getSummary = async (videoDetails, subtitles) => {
         { role: 'user', content: prompt },
       ];
 
-      console.log('Sending chunk to OpenAI:', chunk);
       const openAiResponse = await openai.createChatCompletion({
         model: 'gpt-3.5-turbo',
         messages,
