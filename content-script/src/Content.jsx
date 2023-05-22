@@ -111,6 +111,7 @@ function Content() {
     setActiveTab(0);
     setVideoDetails(null);
     setSubtitles('');
+    setIsExpanded(false);
     setVideoSummary('');
     setCommentsSummary('');
     setExploreDetails('');
