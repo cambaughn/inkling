@@ -10,17 +10,51 @@ const getSummary = async (videoDetails, subtitles) => {
   const openai = new OpenAIApi(configuration);
 
   const splitTextIntoChunks = (text, chunkSize) => {
-    if (text) {
-      const regex = new RegExp(`^(.{1,${chunkSize}}[.!?,])\\s`);
-      const matches = text.match(regex);
-      if (matches) {
-        const [chunk, remainingText] = matches.slice(1);
-        const rest = splitTextIntoChunks(remainingText, chunkSize);
-        return [chunk, ...rest];
+    const chunks = [];
+    let startIndex = 0;
+  
+    while (startIndex < text.length) {
+      let endIndex = startIndex + chunkSize;
+  
+      // Adjust endIndex to end on punctuation if possible or a space if not
+      if (endIndex < text.length) {
+        while (endIndex > startIndex && !/[.!?,;: ]/.test(text.charAt(endIndex))) {
+          endIndex--;
+        }
+      }
+  
+      // Slice the string and add it to the chunks array
+      chunks.push(text.slice(startIndex, endIndex).trim());
+  
+      startIndex = endIndex;
+    }
+  
+    return chunks;
+  };
+  
+  const combineStrings = (strings, characterLimit) => {
+    let combinedStrings = [];
+    let currentString = '';
+  
+    for (let i = 0; i < strings.length; i++) {
+      const string = strings[i];
+  
+      if (currentString.length + string.length <= characterLimit) {
+        currentString += string;
+      } else {
+        combinedStrings.push(currentString);
+        currentString = string;
       }
     }
-    return [text];
+  
+    // Add the remaining string if any
+    if (currentString.length > 0) {
+      combinedStrings.push(currentString);
+    }
+  
+    return combinedStrings;
   };
+  
   
 
   const summarizeChunks = async (chunks) => {
@@ -47,6 +81,7 @@ const getSummary = async (videoDetails, subtitles) => {
       console.log('Received summary:', responseText);
       summaries.push(responseText);
     }
+
     return summaries;
   };
 
@@ -54,18 +89,21 @@ const getSummary = async (videoDetails, subtitles) => {
     const videoTitle = videoDetails?.snippet?.title;
     const videoDescription = videoDetails?.snippet?.description;
 
-    const fullText = `${videoTitle} ${videoDescription} ${subtitles}`;
+    const fullText = `${videoTitle}: ${subtitles}`;
 
-    const chunkSize = 2500;
+    const chunkSize = 14000;
     const chunks = splitTextIntoChunks(fullText, chunkSize).filter(chunk => !!chunk);
 
-    console.log('Original text:', fullText);
+    // console.log('Original text:', fullText);
     console.log('Split into chunks:', chunks);
 
     let summaries = await summarizeChunks(chunks);
+    console.log('Summaries length:', summaries.length);
 
     while (summaries.length > 1) {
-      console.log('Summarizing chunks:', summaries);
+      summaries = combineStrings(summaries, chunkSize);
+      console.log('Summaries length:', summaries.length);
+      // console.log('Summarizing chunks:', summaries);
       summaries = await summarizeChunks(summaries);
     }
 
