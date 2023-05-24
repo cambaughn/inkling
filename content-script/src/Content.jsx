@@ -24,7 +24,7 @@ function Content() {
   const [loading, setLoading] = useState(false);
   const [exploreDetails, setExploreDetails] = useState('');
   const [error, setError] = useState(null);
-  const [tabs, setTabs] = useState(['Summary', 'Explore']);
+  const [tabs, setTabs] = useState(['Summary']);
 
   const handleChangeTab = (tabIndex) => {
     setActiveTab(tabIndex);
@@ -87,20 +87,20 @@ function Content() {
 
 
   // When the summary is available, send it to openAI for the explore details
-  useEffect(() => {
-    async function fetchExploreDetails() {
-      const exploreResponse = await getExploreDetails(videoSummary);
+  // useEffect(() => {
+  //   async function fetchExploreDetails() {
+  //     const exploreResponse = await getExploreDetails(videoSummary);
 
-      if (exploreResponse) {
-        setExploreDetails(exploreResponse);
-      }
-    }
+  //     if (exploreResponse) {
+  //       setExploreDetails(exploreResponse);
+  //     }
+  //   }
 
-    if (videoSummary && !exploreDetails) {
-      console.log('fetching explore details');
-      fetchExploreDetails();
-    }
-  }, [videoSummary]);
+  //   if (videoSummary && !exploreDetails) {
+  //     console.log('fetching explore details');
+  //     fetchExploreDetails();
+  //   }
+  // }, [videoSummary]);
 
 
   // Reset state when videoId changes
