@@ -1,16 +1,16 @@
 :root {
   --content-height: 300px;
-  --preview-height: 50px;
+  --preview-height: 40px;
+  --preview-width: 80px;
   --inkling-color: #21FD5E;
 }
 
 .inkling-content {
   position: fixed;
   bottom: 0;
-  left: 0;
-  width: 100vw;
-  height: var(--content-height);
-  background-color: black;
+  right: 0;
+  width: 450px;
+  /* height: var(--content-height); */
   color: #CCCCCC;
   font-weight: 500;
   font-size: 14px;
@@ -33,7 +33,7 @@
 }
 
 .mainContent {
-  width: 60vw;
+  width: 100%;
   height: calc(var(--content-height) - var(--preview-height));
   display: flex;
   flex-direction: column;
@@ -41,4 +41,7 @@
   justify-content: flex-start;
   box-sizing: border-box;
   gap: 10px;
+  background-color: black;
+  border-top-left-radius: 5px;
+  padding: 20px;
 }

@@ -144,7 +144,7 @@ function Content() {
       <PreviewBar textContent={videoSummary} isExpanded={isExpanded} handleClick={handleBarClick} />
 
       <div className="mainContent">
-        <TabButtons tabs={tabs} activeTab={activeTab} onChangeTab={handleChangeTab} exploreDetails={exploreDetails} />
+        {/* <TabButtons tabs={tabs} activeTab={activeTab} onChangeTab={handleChangeTab} exploreDetails={exploreDetails} /> */}
         <TextContent currentTab={tabs[activeTab]} videoSummary={videoSummary} commentsSummary={commentsSummary} exploreDetails={exploreDetails} />
       </div>
     </div>

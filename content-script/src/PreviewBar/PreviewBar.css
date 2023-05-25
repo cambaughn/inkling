@@ -1,7 +1,15 @@
 .preview-bar {
   width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.previewButton {
+  width: var(--preview-width);
   height: var(--preview-height);
-  color: #fff;
+  color: black;
   overflow: hidden;
   white-space: nowrap;
   position: relative;
@@ -10,35 +18,10 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  background-color: var(--inkling-color);
+  border-top-left-radius: 5px;
 }
 
-.previewContent {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  gap: 15px;
-  width: calc(100% - 30px);
-  height: 100%;
-}
-
-.previewText {
-  width: 100%; /* Set the desired width of the container */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.expandedContent {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-}
-
-.expandDownIcon {
-  opacity: 0.5;
+.expandIcon {
+  color: black;
 }

@@ -4,22 +4,16 @@ import './PreviewBar.css';
 
 const PreviewBar = ({ textContent, isExpanded, handleClick }) => {
   return (
-    <div className={'preview-bar'} onClick={handleClick}>
-      {!isExpanded &&
-        <div className={'previewContent'}>
-          <img src={chrome.runtime.getURL('expand_up.svg')} />
-          {textContent && (
-            <span className="previewText">{textContent}</span>
-          )}
-          <img src={chrome.runtime.getURL('expand_up.svg')} />
-        </div>
-      }
+    <div className={'preview-bar'}>
+      <div className={'previewButton'} onClick={handleClick}>
+        {!isExpanded &&
+          <img src={chrome.runtime.getURL('expand_up.svg')} className={'expandIcon'} />
+        }
 
-      { isExpanded &&
-        <div className={'expandedContent'}>
-          <img src={chrome.runtime.getURL('expand_down.svg')} className={'expandDownIcon'} />
-        </div>
-      }
+        { isExpanded &&
+          <img src={chrome.runtime.getURL('expand_down.svg')} className={'expandIcon'} />
+        }
+      </div>
     </div>
   );
 };
