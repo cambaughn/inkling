@@ -10,7 +10,7 @@
   height: 100%;
   box-sizing: border-box;
   /* overflow-y: scroll; */
-  padding-bottom: 30px;
+  /* padding-bottom: 30px; */
 }
 
 .textContentInner::-webkit-scrollbar {

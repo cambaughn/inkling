@@ -7,8 +7,6 @@ import { getLoadingText } from "./util";
 
 function TextContent({ currentTab, videoSummary, commentsSummary, exploreDetails }) {
   const [loadingText, setLoadingText] = useState('');
-  const [scrolled, setScrolled] = useState(false);
-  const divRef = useRef(null);
   let logoUrl = chrome?.runtime ? chrome.runtime.getURL('logo.png') : 'logo.png';
 
   useEffect(() => {
@@ -16,24 +14,10 @@ function TextContent({ currentTab, videoSummary, commentsSummary, exploreDetails
     setLoadingText(text);
   }, []);
 
-  const handleScroll = () => {
-    const { scrollTop } = divRef.current;
-    if (scrollTop > 0) {
-      // User has scrolled down
-      setScrolled(true);
-    } else {
-      setScrolled(false);
-    }
-  };
-
   return (
     <div className="textContentContainer">
-      <div className={classNames("topGradient", { gradientVisible: scrolled })}></div>
-
       <div 
       className="textContentInner"
-      ref={divRef}
-      onScroll={handleScroll}
       >
         {currentTab === 'Summary' && videoSummary.length === 0 &&
           <div className="logoWrapper">
@@ -67,7 +51,6 @@ function TextContent({ currentTab, videoSummary, commentsSummary, exploreDetails
         }
       </div>
 
-      <div className="bottomGradient"></div>
     </div>
   )
 }

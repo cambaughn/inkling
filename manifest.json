@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Inkling",
   "description": "Get the most out of your YouTube experience with summarized key points and additional context for videos.",
-  "version": "1.9",
+  "version": "2.0",
   "action": {
     "default_title": "Popup",
     "default_popup": "index.html",
