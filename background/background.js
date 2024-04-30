@@ -1,28 +1,23 @@
 import { getVideoId } from "../content-script/util/youTube";
-console.log('background script ======');
-
-let videoId = null;
-let mounted = false;
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
   if (changeInfo.status === 'complete') {
-    videoId = getVideoId(tab.url);
-    console.log('get video id =====', videoId);
-    if (videoId) {
-      chrome.tabs.sendMessage(tabId, { type: 'videoId', data: videoId });
-    } else {
-      chrome.tabs.sendMessage(tabId, { type: 'videoId', data: null });
-    }
+    const videoId = getVideoId(tab.url);
+    console.log('Video ID:', videoId);
+
+    // Send message to the content script with video ID or null
+    chrome.tabs.sendMessage(tabId, { type: 'videoId', data: videoId });
   }
 });
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.type === 'contentScriptMounted') {
-    console.log('content script mounted!!!!!! ', videoId);
-    mounted = true;
-    // Wait for the content script to finish rendering before sending the videoId message
+    console.log('Content script mounted.');
+
+    // Resend the video ID when the content script mounts
     chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-      chrome.tabs.sendMessage(tabs[0].id, { type: 'videoId', data: videoId });
+      const activeTabId = tabs[0].id;
+      chrome.tabs.sendMessage(activeTabId, { type: 'videoId', data: request.data });
     });
   }
 });

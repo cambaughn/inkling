@@ -2,7 +2,7 @@ import { Configuration, OpenAIApi } from 'openai';
 import { sliceStringToRange } from './string';
 
 const getSummary = async (videoDetails, subtitles) => {
-  const OPENAI_API_KEY = chrome.runtime.getManifest().env.OPENAI_API_KEY;
+  const OPENAI_API_KEY = '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';
 
   const configuration = new Configuration({
     apiKey: OPENAI_API_KEY,
@@ -111,7 +111,7 @@ const getSummary = async (videoDetails, subtitles) => {
 
 
 const getExploreDetails = async (summary) => {
-  const OPENAI_API_KEY = chrome.runtime.getManifest().env.OPENAI_API_KEY;
+  const OPENAI_API_KEY = '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';
 
   const configuration = new Configuration({
     apiKey: OPENAI_API_KEY,
@@ -146,7 +146,7 @@ const getExploreDetails = async (summary) => {
 
 
 const getCommentsSummary = async (comments) => {
-  const OPENAI_API_KEY = chrome.runtime.getManifest().env.OPENAI_API_KEY;
+  const OPENAI_API_KEY = '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';
 
   const configuration = new Configuration({
     apiKey: OPENAI_API_KEY,

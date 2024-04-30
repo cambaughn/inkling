@@ -47,9 +47,5 @@
       "resources": [ "logo.png", "expand_up.svg", "expand_down.svg" ],
       "matches": [ "https://*/*" ]
     }
-  ],
-  "env": {
-    "OPENAI_API_KEY": "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",
-    "MODE": "prod"
-  }
+  ]
 }

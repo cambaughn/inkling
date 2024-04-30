@@ -40,6 +40,7 @@ function Content() {
 
   // Whenever the videoId changes, get the new video details
   useEffect(() => {
+    console.log('have video id, getting video details ', videoId)
     async function fetchVideoDetails() {
       const details = await getVideoDetails(videoId);
       setVideoDetails(details);
@@ -119,6 +120,7 @@ function Content() {
     // Add message listener
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       if (message.type === 'videoId' && message.data !== videoId) { // if there are changes to the videoId
+        console.log('receiving video id in content script', message.data)
         resetState();
         setVideoId(message.data);
         console.log('setting video id ', message.data);
@@ -152,8 +154,3 @@ function Content() {
 }
 
 export default Content;
-
-
-
-// PALM API - AIzaSyCwRncgj8pm-zAdTa2elMSQLLpcaQ2EFwk
-// 8196 token limit
