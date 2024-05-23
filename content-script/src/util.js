@@ -12,10 +12,9 @@ const findSubtitles = async (videoId) => {
     return subtitleText;
   }).join(' ');
 
-  console.log('subtitles ', fullSubtitleText);
+  // console.log('subtitles !!! ', fullSubtitleText);
   return fullSubtitleText;
 }
 
-findSubtitles();
 
 export { findSubtitles }

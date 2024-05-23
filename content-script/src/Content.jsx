@@ -11,6 +11,7 @@ import classNames from "classnames";
 // Util
 import { getVideoDetails, getYouTubeSubtitles } from "../util/youTube";
 import { getSummary, getCommentsSummary, getExploreDetails } from "../util/openAI";
+import { findSubtitles } from "./util";
 
 
 function Content() {
@@ -48,6 +49,10 @@ function Content() {
     
     async function fetchSubtitles() {
       const transcript = await getYouTubeSubtitles(videoId);
+      // const transcript2 = await findSubtitles(videoId);
+      console.log('!!! transcript : ', transcript)
+      // console.log('!!! util.js subtitles : ', transcript2);
+
       setSubtitles(transcript);
     }
 
@@ -141,9 +146,9 @@ function Content() {
 
 
   return (
-    <div className={classNames('inkling-content', { visible: videoSummary?.length && videoId, expanded: isExpanded })}>
-      <Loading loading={loading} error={error} />
-      <PreviewBar textContent={videoSummary} isExpanded={isExpanded} handleClick={handleBarClick} />
+    <div className={'inkling-content'}>
+      {/* <Loading loading={loading} error={error} /> */}
+      {/* <PreviewBar textContent={videoSummary} isExpanded={isExpanded} handleClick={handleBarClick} /> */}
 
       <div className="mainContent">
         {/* <TabButtons tabs={tabs} activeTab={activeTab} onChangeTab={handleChangeTab} exploreDetails={exploreDetails} /> */}
