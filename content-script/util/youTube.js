@@ -10,7 +10,8 @@ const getVideoId = (url) => {
 }
 
 const mode = chrome?.runtime?.getManifest().env?.MODE;
-const baseApiUrl = mode === 'dev' ? 'http://localhost:3000/api' : 'https://inkling-api.vercel.app/api';
+// const baseApiUrl = mode === 'dev' ? 'http://localhost:3000/api' : 'https://inkling-api.vercel.app/api';
+const baseApiUrl = 'https://inkling-api.vercel.app/api';
 console.log('base api url =====', mode, baseApiUrl);
 // https://inkling-api.vercel.app/api/subtitles/8tpv6n1ykfA
 
