@@ -1,5 +1,5 @@
 import { getVideoId } from "../content-script/util/youTube";
-import { XMLParser } from 'fast-xml-parser';
+import { fetchSubtitles } from './util.js';
 
 // Listener for tab updates
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
@@ -13,7 +13,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 });
 
 // Listener for messages from content scripts
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(async function(request, sender, sendResponse) {
   if (request.type === 'contentScriptMounted') {
     console.log('Content script mounted.');
 
@@ -24,19 +24,12 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     });
   } else if (request.type === 'fetchSubtitles') {
     const videoId = request.videoId;
-    fetch(`https://www.youtube.com/api/timedtext?lang=en&v=${videoId}`)
-      .then(response => response.text())
-      .then(xmlText => {
-        const parser = new XMLParser();
-        const jsonObj = parser.parse(xmlText);
-        const texts = jsonObj.transcript.text;
-        let fullSubtitleText = texts.map(node => node.trim()).join(' ');
-        sendResponse({ subtitles: fullSubtitleText });
-      })
-      .catch(error => {
-        console.error("Error fetching subtitles:", error);
-        sendResponse({ error: 'Failed to fetch subtitles' });
-      });
+    try {
+      const subtitles = await fetchSubtitles(videoId);
+      sendResponse({ subtitles });
+    } catch (error) {
+      sendResponse({ error: 'Failed to fetch subtitles' });
+    }
     return true; // Will respond asynchronously
   }
 });
