@@ -1,5 +1,43 @@
-import { getVideoId } from "../content-script/util/youTube";
-import { fetchSubtitles } from './util.js';
+import { getSubtitles } from 'youtube-captions-scraper';
+
+// Fetch the YouTube video ID from the URL
+const getVideoId = (url) => {
+  try {
+    const urlObj = new URL(url);
+    if (urlObj.hostname === 'www.youtube.com' || urlObj.hostname === 'youtube.com') {
+      return urlObj.searchParams.get("v");
+    } else {
+      console.warn('Not a YouTube URL:', url);
+      return null;
+    }
+  } catch (error) {
+    console.error('Invalid URL:', url);
+    return null;
+  }
+};
+
+// Fetch subtitles using the youtube-captions-scraper package
+const fetchSubtitles = async (videoId) => {
+  try {
+    console.log('Fetching subtitles for video:', videoId);
+    const subtitles = await getSubtitles({
+      videoID: videoId,
+      lang: 'en',
+    });
+
+    const fullSubtitleText = subtitles.map(subObject => {
+      let subtitleText = subObject.text.trim();
+      return subtitleText;
+    }).join(' ');
+
+    console.log('Full Subtitle Text:', fullSubtitleText);
+
+    return fullSubtitleText;
+  } catch (error) {
+    console.error('Error fetching subtitles:', error);
+    throw error;
+  }
+};
 
 // Listener for tab updates
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {

@@ -5,19 +5,6 @@ import "./Content.css";
 import { useEffect, useState } from "react";
 import TextContent from "./TextContent/TextContent";
 
-// Function to fetch subtitles via background script
-const findSubtitles = (videoId) => {
-  return new Promise((resolve, reject) => {
-    chrome.runtime.sendMessage({ type: 'fetchSubtitles', videoId: videoId }, (response) => {
-      if (response.error) {
-        reject(response.error);
-      } else {
-        resolve(response.subtitles);
-      }
-    });
-  });
-};
-
 function Content() {
   const [videoId, setVideoId] = useState('');
   const [subtitles, setSubtitles] = useState('');
@@ -27,9 +14,17 @@ function Content() {
     if (videoId) {
       try {
         console.log('Trying to get subtitles');
-        const transcript = await findSubtitles(videoId);
-        console.log('Transcript:', transcript);
-        setSubtitles(transcript);
+        const response = await new Promise((resolve, reject) => {
+          chrome.runtime.sendMessage({ type: 'fetchSubtitles', videoId: videoId }, (response) => {
+            if (response.error) {
+              reject(response.error);
+            } else {
+              resolve(response.subtitles);
+            }
+          });
+        });
+        console.log('Transcript:', response);
+        setSubtitles(response);
       } catch (error) {
         console.error('Error fetching subtitles:', error);
         setError('Failed to fetch subtitles');
