@@ -5,17 +5,50 @@ import "./Content.css";
 import { useEffect, useState } from "react";
 import TextContent from "./TextContent/TextContent";
 
-// Function to fetch subtitles via background script
-const findSubtitles = (videoId) => {
-  return new Promise((resolve, reject) => {
-    chrome.runtime.sendMessage({ type: 'fetchSubtitles', videoId: videoId }, (response) => {
-      if (response.error) {
-        reject(response.error);
-      } else {
-        resolve(response.subtitles);
-      }
-    });
-  });
+// Function to extract subtitles directly from the YouTube page content
+const extractSubtitles = async (videoId) => {
+  try {
+    console.log('Fetching subtitles for video:', videoId);
+
+    // Get the page content
+    const videoPageData = document.documentElement.innerHTML;
+    if (!videoPageData.includes('captionTracks')) {
+      throw new Error(`Could not find captions for video: ${videoId}`);
+    }
+
+    // Extract captionTracks using regex
+    const regex = /"captionTracks":(\[.*?\])/;
+    const [match] = regex.exec(videoPageData);
+    const { captionTracks } = JSON.parse(`{${match}}`);
+    const subtitleTrack = captionTracks.find(track => track.vssId === '.en' || track.vssId === 'a.en' || track.vssId.match('.en'));
+
+    if (!subtitleTrack || !subtitleTrack.baseUrl) {
+      throw new Error(`Could not find English captions for ${videoId}`);
+    }
+
+    // Fetch the subtitles
+    const response = await fetch(subtitleTrack.baseUrl);
+    const transcript = await response.text();
+    const lines = transcript
+      .replace('<?xml version="1.0" encoding="utf-8" ?><transcript>', '')
+      .replace('</transcript>', '')
+      .split('</text>')
+      .filter(line => line && line.trim())
+      .map(line => {
+        const htmlText = line
+          .replace(/<text.+>/, '')
+          .replace(/&amp;/gi, '&')
+          .replace(/<\/?[^>]+(>|$)/g, '');
+
+        return htmlText.trim();
+      }).join(' ');
+
+    console.log('Full Subtitle Text:', lines);
+    return lines;
+  } catch (error) {
+    console.error('Error fetching subtitles:', error);
+    throw error;
+  }
 };
 
 function Content() {
@@ -26,8 +59,8 @@ function Content() {
   const fetchSubtitles = async () => {
     if (videoId) {
       try {
-        console.log('Trying to get subtitles');
-        const transcript = await findSubtitles(videoId);
+        console.log('Trying to get subtitles for video ID:', videoId);
+        const transcript = await extractSubtitles(videoId);
         console.log('Transcript:', transcript);
         setSubtitles(transcript);
       } catch (error) {
@@ -41,9 +74,9 @@ function Content() {
   useEffect(() => {
     const handleMessage = (message) => {
       if (message.type === 'videoId' && message.data !== videoId) {
-        console.log('Receiving video id in content script', message.data);
+        console.log('Receiving video ID in content script:', message.data);
         setVideoId(message.data);
-        console.log('Setting video id', message.data);
+        console.log('Setting video ID:', message.data);
       }
     };
 
@@ -56,14 +89,20 @@ function Content() {
   }, [videoId]);
 
   useEffect(() => {
+    if (videoId) {
+      fetchSubtitles();
+    }
+  }, [videoId]);
+
+  useEffect(() => {
     // Send a message to the background script when the component has mounted
+    console.log('Content script mounted, sending message to background script');
     chrome.runtime.sendMessage({ type: 'contentScriptMounted' });
   }, []);
 
   return (
     <div className={'inkling-content'}>
       <div className="mainContent">
-        <button onClick={fetchSubtitles}>Fetch Subtitles</button>
         {error && <p className="error">{error}</p>}
         <TextContent subtitles={subtitles} />
       </div>
