@@ -5,7 +5,7 @@ import Content from "./Content.jsx";
 
 function placeContainerWhenAvailable() {
   const observer = new MutationObserver((mutations, obs) => {
-    const targetContainer = document.getElementById("related");
+    const targetContainer = document.getElementById("secondary-inner");
     if (targetContainer) {
       console.log("Found target container, rendering app");
       const root = document.createElement("div");
