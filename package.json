@@ -12,6 +12,7 @@
     "@crxjs/vite-plugin": "2.0.0-beta.11",
     "classnames": "^2.3.2",
     "fast-xml-parser": "^4.4.0",
+    "he": "^1.2.0",
     "lodash": "^4.17.21",
     "node-fetch": "^3.3.2",
     "openai": "^3.2.1",

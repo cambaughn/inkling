@@ -4,6 +4,8 @@
 import "./Content.css";
 import { useEffect, useState } from "react";
 import TextContent from "./TextContent/TextContent";
+import extractKeySentences from "./util";
+import he from 'he';
 
 // Function to extract subtitles directly from the YouTube page content
 const extractSubtitles = async (videoId) => {
@@ -36,11 +38,11 @@ const extractSubtitles = async (videoId) => {
       .filter(line => line && line.trim())
       .map(line => {
         const htmlText = line
-          .replace(/<text.+>/, '')
-          .replace(/&amp;/gi, '&')
+          .replace(/<text.+?>/g, '')
           .replace(/<\/?[^>]+(>|$)/g, '');
-
-        return htmlText.trim();
+        
+        const decodedText = he.decode(htmlText);
+        return decodedText.replace(/&#39;/g, "'").replace(/&quot;/g, '"').trim();
       }).join(' ');
 
     console.log('Full Subtitle Text:', lines);
@@ -54,7 +56,9 @@ const extractSubtitles = async (videoId) => {
 function Content() {
   const [videoId, setVideoId] = useState('');
   const [subtitles, setSubtitles] = useState('');
+  const [summary, setSummary] = useState('');
   const [error, setError] = useState(null);
+  const [hasSubtitles, setHasSubtitles] = useState(false);
 
   const fetchSubtitles = async () => {
     if (videoId) {
@@ -63,10 +67,25 @@ function Content() {
         const transcript = await extractSubtitles(videoId);
         console.log('Transcript:', transcript);
         setSubtitles(transcript);
+        setHasSubtitles(true); // Set flag to show the button if subtitles are available
       } catch (error) {
         console.error('Error fetching subtitles:', error);
         setError('Failed to fetch subtitles');
+        setHasSubtitles(false); // Set flag to hide the button if fetching subtitles failed
       }
+    }
+  };
+
+  const summarize = async () => {
+    try {
+      // Extractive Summarization
+      const keySentences = extractKeySentences(subtitles, 5);
+      const summaryText = keySentences.join(' ');
+      console.log('Summary:', summaryText);
+      setSummary(summaryText);
+    } catch (error) {
+      console.error('Error summarizing text:', error);
+      setError('Failed to summarize text');
     }
   };
 
@@ -104,7 +123,12 @@ function Content() {
     <div className={'inkling-content'}>
       <div className="mainContent">
         {error && <p className="error">{error}</p>}
+        {hasSubtitles && <button onClick={summarize}>Summarize</button>}
         <TextContent subtitles={subtitles} />
+        <div className="summary">
+          <h2>Summary</h2>
+          <p>{summary}</p>
+        </div>
       </div>
     </div>
   );
