@@ -4,7 +4,7 @@
 import "./Content.css";
 import { useEffect, useState } from "react";
 import TextContent from "./TextContent/TextContent";
-import extractKeySentences from "./util";
+import { getSummary } from "../util/openAI";
 import he from 'he';
 
 // Function to extract subtitles directly from the YouTube page content
@@ -78,9 +78,15 @@ function Content() {
 
   const summarize = async () => {
     try {
-      // Extractive Summarization
-      const keySentences = extractKeySentences(subtitles, 5);
-      const summaryText = keySentences.join(' ');
+      const videoDetails = {
+        snippet: {
+          title: document.title,
+          description: document.querySelector('meta[name="description"]')?.content || ''
+        }
+      };
+
+      // Summarization using OpenAI
+      const summaryText = await getSummary(videoDetails, subtitles);
       console.log('Summary:', summaryText);
       setSummary(summaryText);
     } catch (error) {
