@@ -73,7 +73,7 @@ const getSummary = async (videoDetails, subtitles) => {
       ];
 
       const openAiResponse = await openai.createChatCompletion({
-        model: 'gpt-4o',
+        model: 'gpt-3.5-turbo',
         messages,
       });
 
@@ -90,7 +90,7 @@ const getSummary = async (videoDetails, subtitles) => {
 
     const fullText = `${videoTitle}: ${subtitles}`;
 
-    const chunkSize = 120000;
+    const chunkSize = 14000;
     const chunks = splitTextIntoChunks(fullText, chunkSize).filter(chunk => !!chunk);
 
     let summaries = await summarizeChunks(chunks);
