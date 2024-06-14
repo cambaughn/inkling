@@ -7,15 +7,13 @@
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-  <div id="container">
+  <div class="popup-container">
     <h1>Inkling Settings</h1>
-    <form id="apiKeyForm">
-      <label for="apiKey">OpenAI API Key:</label>
-      <input type="text" id="apiKey" name="apiKey" required>
-      <button type="submit">Save</button>
-    </form>
-    <p id="status"></p>
+    <label for="apiKeyInput">OpenAI API Key:</label>
+    <input type="text" id="apiKeyInput" placeholder="Enter your OpenAI API Key">
+    <button id="saveButton">Save</button>
+    <p id="statusMessage"></p>
   </div>
-  <script src="popup.js"></script>
+  <script type="module" src="popup.js"></script>
 </body>
 </html>

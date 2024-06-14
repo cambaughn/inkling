@@ -13,7 +13,7 @@
   },
   "content_scripts": [
     {
-      "run_at" : "document_start",
+      "run_at": "document_start",
       "js": ["content-script/src/main.jsx"],
       "matches": [
         "https://www.youtube.com/*",
@@ -21,7 +21,7 @@
       ]
     },
     {
-      "run_at" : "document_idle",
+      "run_at": "document_idle",
       "js": ["content-script/before.js"],
       "matches": [
         "https://www.youtube.com/*",
@@ -46,8 +46,8 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": [ "logo.png", "expand_up.svg", "expand_down.svg" ],
-      "matches": [ "https://*/*" ]
+      "resources": ["logo.png", "expand_up.svg", "expand_down.svg"],
+      "matches": ["https://*/*"]
     }
   ]
 }
