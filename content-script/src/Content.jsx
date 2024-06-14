@@ -42,7 +42,9 @@ const extractSubtitles = async (videoId) => {
           .replace(/<\/?[^>]+(>|$)/g, '');
         
         const decodedText = he.decode(htmlText);
-        return decodedText.replace(/&#39;/g, "'").replace(/&quot;/g, '"').trim();
+        const cleanText = decodedText.replace(/&#39;/g, "'").replace(/&quot;/g, '"').trim();
+
+        return cleanText;
       }).join(' ');
 
     console.log('Full Subtitle Text:', lines);
@@ -128,13 +130,17 @@ function Content() {
   return (
     <div className={'inkling-content'}>
       <div className="mainContent">
-        {error && <p className="error">{error}</p>}
-        {hasSubtitles && <button onClick={summarize}>Summarize</button>}
-        <TextContent subtitles={subtitles} />
-        <div className="summary">
-          <h2>Summary</h2>
-          <p>{summary}</p>
-        </div>
+        {hasSubtitles && !summary && <button onClick={summarize}>Summarize</button>}
+        { summary && (
+          <>
+            <h2 className="header">Summary</h2> 
+            <div className="summary">
+              {summary}
+            </div>
+          </>
+        )}
+
+        {error && <div className="error">{error}</div>}
       </div>
     </div>
   );

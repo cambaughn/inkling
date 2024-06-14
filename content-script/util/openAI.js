@@ -60,7 +60,8 @@ const getSummary = async (videoDetails, subtitles) => {
   const summarizeChunks = async (chunks) => {
     const summaries = [];
     for (const chunk of chunks) {
-      const prompt = `Please provide a 2-3 sentence summary of the main topic of the video, followed by bullet pointed list of the main points:\n\n${chunk}`;
+      // const prompt = `I am providing a transcription of a video. Please provide a 2-3 sentence summary of the main topic of the video, followed by bullet pointed list of the main points:\n\n${chunk}`;
+      const prompt = `I am providing a transcription of a video. Please provide a concise bullet-pointed list of the main points of the video. Preserve opinions and sentiment:\n\n${chunk}`;
 
       const messages = [
         {
@@ -72,7 +73,7 @@ const getSummary = async (videoDetails, subtitles) => {
       ];
 
       const openAiResponse = await openai.createChatCompletion({
-        model: 'gpt-3.5-turbo',
+        model: 'gpt-4o',
         messages,
       });
 
@@ -85,11 +86,11 @@ const getSummary = async (videoDetails, subtitles) => {
 
   try {
     const videoTitle = videoDetails?.snippet?.title;
-    const videoDescription = videoDetails?.snippet?.description;
+    // const videoDescription = videoDetails?.snippet?.description;
 
     const fullText = `${videoTitle}: ${subtitles}`;
 
-    const chunkSize = 14000;
+    const chunkSize = 120000;
     const chunks = splitTextIntoChunks(fullText, chunkSize).filter(chunk => !!chunk);
 
     let summaries = await summarizeChunks(chunks);
