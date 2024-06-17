@@ -3,7 +3,6 @@
 
 import "./Content.css";
 import { useEffect, useState } from "react";
-import TextContent from "./TextContent/TextContent";
 import { getSummary } from "../util/openAI";
 import he from 'he';
 
@@ -72,7 +71,7 @@ function Content() {
         setHasSubtitles(true); // Set flag to show the button if subtitles are available
       } catch (error) {
         console.error('Error fetching subtitles:', error);
-        setError('Failed to fetch subtitles');
+        setError('Unable to summarize');
         setHasSubtitles(false); // Set flag to hide the button if fetching subtitles failed
       }
     }
