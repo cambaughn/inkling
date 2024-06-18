@@ -1,8 +1,7 @@
-# React TypeScript Chrome Extension
+# Inkling - YouTube Summary Chrome Extension
 
-This repository includes examples of how to set up a Chrome Extension with React and TypeScript.
+Inkling is an open-source YouTube summary Chrome extension powered by the OpenAI API.
 
-This project uses [Vite](https://vitejs.dev/) and [crxjs](https://crxjs.dev/vite-plugin) to build the extension.
 
 ## Setup
 

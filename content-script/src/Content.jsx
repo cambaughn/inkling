@@ -60,6 +60,8 @@ function Content() {
   const [summary, setSummary] = useState('');
   const [error, setError] = useState(null);
   const [hasSubtitles, setHasSubtitles] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [theme, setTheme] = useState('dark');
 
   const fetchSubtitles = async () => {
     if (videoId) {
@@ -79,6 +81,7 @@ function Content() {
 
   const summarize = async () => {
     try {
+      setLoading(true);
       const videoDetails = {
         snippet: {
           title: document.title,
@@ -93,6 +96,8 @@ function Content() {
     } catch (error) {
       console.error('Error summarizing text:', error);
       setError('Failed to summarize text');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -126,11 +131,31 @@ function Content() {
     chrome.runtime.sendMessage({ type: 'contentScriptMounted' });
   }, []);
 
+  // Check YouTube theme
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      const isDark = document.documentElement.getAttribute('dark') === 'true';
+      setTheme(isDark ? 'dark' : 'light');
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['dark'],
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className={'inkling-content'}>
+    <div className={`inkling-content ${theme}`}>
       <div className="mainContent">
-        {hasSubtitles && !summary && <button onClick={summarize}>Summarize</button>}
-        { summary && (
+        {error && <p className="error">{error}</p>}
+        {hasSubtitles && !summary && (
+          <button className="summarizeButton" onClick={summarize} disabled={loading}>
+            {loading ? 'Getting summary...' : 'Summarize'}
+          </button>
+        )}
+        {summary && (
           <>
             <h2 className="header">Summary</h2> 
             <div className="summary">
@@ -138,7 +163,6 @@ function Content() {
             </div>
           </>
         )}
-
         {error && <div className="error">{error}</div>}
       </div>
     </div>
