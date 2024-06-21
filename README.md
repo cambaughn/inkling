@@ -7,7 +7,7 @@ Inkling is an open-source YouTube summary Chrome extension powered by the OpenAI
 
 ### Clone repository
 ```sh
-git clone git@github.com:yosevu/react-content-script.git
+git clone git@github.com:cambaughn/inkling.git
 ```
 
 ### Install dependencies
@@ -27,9 +27,9 @@ yarn build
 1. Navigate to [chrome://extensions/](chrome://extensions/)
 1. Turn on the "Developer mode" toggle switch in the top right of the window
 1. Click the "Load unpacked" button in top left of the window
-1. Go to the `react-content-script` directory and select the `dist` directory to load the extension
-1. Navigate to https://blank.org/ to see the Content Script React app
-1. Go to extensions and click "React TypeScript Chrome Extension" to see the Popup React app
+1. Go to the `inkling` directory and select the `dist` directory to load the extension
+1. Navigate to YouTube to see the Content Script React app in action
+1. Go to extensions and click "Inkling" to see the Popup React app
 
 ## [Popup](https://developer.chrome.com/docs/extensions/mv3/user_interface/#popup)
 
