@@ -33,7 +33,7 @@ yarn build
 
 ## [Popup](https://developer.chrome.com/docs/extensions/mv3/user_interface/#popup)
 
-The popup source code is at the root directory.
+The popup source code is in the `popup` directory.
 
 ## [Content Script](https://developer.chrome.com/docs/extensions/mv3/content_scripts/)
 
