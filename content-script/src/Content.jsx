@@ -63,19 +63,17 @@ function Content() {
   const [loading, setLoading] = useState(false);
   const [theme, setTheme] = useState('dark');
 
-  const fetchSubtitles = async () => {
-    if (videoId) {
-      try {
-        console.log('Trying to get subtitles for video ID:', videoId);
-        const transcript = await extractSubtitles(videoId);
-        console.log('Transcript:', transcript);
-        setSubtitles(transcript);
-        setHasSubtitles(true); // Set flag to show the button if subtitles are available
-      } catch (error) {
-        console.error('Error fetching subtitles:', error);
-        setError('Unable to summarize');
-        setHasSubtitles(false); // Set flag to hide the button if fetching subtitles failed
-      }
+  const fetchSubtitles = async (videoId) => {
+    try {
+      console.log('Trying to get subtitles for video ID:', videoId);
+      const transcript = await extractSubtitles(videoId);
+      console.log('Transcript:', transcript);
+      setSubtitles(transcript);
+      setHasSubtitles(true); // Set flag to show the button if subtitles are available
+    } catch (error) {
+      console.error('Error fetching subtitles:', error);
+      setError('Unable to summarize');
+      setHasSubtitles(false); // Set flag to hide the button if fetching subtitles failed
     }
   };
 
@@ -107,7 +105,14 @@ function Content() {
       if (message.type === 'videoId' && message.data !== videoId) {
         console.log('Receiving video ID in content script:', message.data);
         setVideoId(message.data);
-        console.log('Setting video ID:', message.data);
+        setSubtitles('');
+        setSummary('');
+        setHasSubtitles(false);
+        setError(null);
+        setLoading(false);
+        if (message.data) {
+          waitForPageLoad(message.data);
+        }
       }
     };
 
@@ -119,9 +124,43 @@ function Content() {
     };
   }, [videoId]);
 
+  // Function to wait for page to load before extracting subtitles
+  const waitForPageLoad = (videoId) => {
+    const observer = new MutationObserver(() => {
+      if (document.querySelector('ytd-watch-flexy')) {
+        fetchSubtitles(videoId);
+        observer.disconnect();
+      }
+    });
+
+    observer.observe(document, { childList: true, subtree: true });
+  };
+
+  // Listen for URL changes
+  useEffect(() => {
+    const handleUrlChange = () => {
+      const newVideoId = new URL(window.location.href).searchParams.get('v');
+      if (newVideoId && newVideoId !== videoId) {
+        setVideoId(newVideoId);
+        setSummary(''); // Clear previous summary
+        setHasSubtitles(false);
+        setSubtitles('');
+        setError(null);
+        setLoading(false);
+      }
+    };
+
+    handleUrlChange(); // Initial call
+
+    const observer = new MutationObserver(handleUrlChange);
+    observer.observe(document, { subtree: true, childList: true });
+
+    return () => observer.disconnect();
+  }, [videoId]);
+
   useEffect(() => {
     if (videoId) {
-      fetchSubtitles();
+      waitForPageLoad(videoId);
     }
   }, [videoId]);
 

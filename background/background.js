@@ -14,55 +14,6 @@ const getVideoId = (url) => {
   }
 };
 
-// Function to fetch data from a URL
-const fetchData = async (url) => {
-  const response = await fetch(url);
-  return await response.text();
-};
-
-// Fetch subtitles directly using the YouTube API
-const fetchSubtitles = async (videoId) => {
-  try {
-    console.log('Fetching subtitles for video:', videoId);
-    const videoPageUrl = `https://www.youtube.com/watch?v=${videoId}`;
-    const videoPageData = await fetchData(videoPageUrl);
-    if (!videoPageData.includes('captionTracks')) {
-      throw new Error(`Could not find captions for video: ${videoId}`);
-    }
-
-    const regex = /"captionTracks":(\[.*?\])/;
-    const [match] = regex.exec(videoPageData);
-    const { captionTracks } = JSON.parse(`{${match}}`);
-    const subtitleTrack = captionTracks.find(track => track.vssId === '.en' || track.vssId === 'a.en' || track.vssId.match('.en'));
-
-    if (!subtitleTrack || !subtitleTrack.baseUrl) {
-      throw new Error(`Could not find English captions for ${videoId}`);
-    }
-
-    const transcriptUrl = subtitleTrack.baseUrl;
-    const transcript = await fetchData(transcriptUrl);
-    const lines = transcript
-      .replace('<?xml version="1.0" encoding="utf-8" ?><transcript>', '')
-      .replace('</transcript>', '')
-      .split('</text>')
-      .filter(line => line && line.trim())
-      .map(line => {
-        const htmlText = line
-          .replace(/<text.+>/, '')
-          .replace(/&amp;/gi, '&')
-          .replace(/<\/?[^>]+(>|$)/g, '');
-
-        return htmlText.trim();
-      }).join(' ');
-
-    console.log('Full Subtitle Text:', lines);
-    return lines;
-  } catch (error) {
-    console.error('Error fetching subtitles:', error);
-    throw error;
-  }
-};
-
 // Listener for tab updates
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
   if (changeInfo.status === 'complete' && tab.url) {
@@ -87,31 +38,5 @@ chrome.runtime.onMessage.addListener(async function(request, sender, sendRespons
         chrome.tabs.sendMessage(activeTabId, { type: 'videoId', data: videoId });
       }
     });
-  } else if (request.type === 'fetchSubtitles') {
-    const videoId = request.videoId;
-    try {
-      const subtitles = await fetchSubtitles(videoId);
-      sendResponse({ subtitles });
-    } catch (error) {
-      sendResponse({ error: 'Failed to fetch subtitles' });
-    }
-    return true; // Will respond asynchronously
   }
 });
-
-// Intercept web requests to add the appropriate CORS headers
-chrome.webRequest.onHeadersReceived.addListener(
-  function(details) {
-    const responseHeaders = details.responseHeaders.filter(header => {
-      return !['access-control-allow-origin', 'access-control-allow-methods', 'access-control-allow-headers'].includes(header.name.toLowerCase());
-    });
-
-    responseHeaders.push({ name: 'Access-Control-Allow-Origin', value: '*' });
-    responseHeaders.push({ name: 'Access-Control-Allow-Methods', value: 'GET, POST, PUT, DELETE, OPTIONS' });
-    responseHeaders.push({ name: 'Access-Control-Allow-Headers', value: '*' });
-
-    return { responseHeaders };
-  },
-  { urls: ['*://www.youtube.com/*'] },
-  ['blocking', 'responseHeaders', 'extraHeaders']
-);
