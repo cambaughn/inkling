@@ -1,11 +1,8 @@
 import { Configuration, OpenAIApi } from 'openai';
 
 const getApiKey = () => {
-  console.log('getting api key')
   return new Promise((resolve, reject) => {
     chrome.storage.local.get('openaiApiKey', (data) => {
-    console.log('got api key ', data.openaiApiKey)
-
       if (data.openaiApiKey) {
         resolve(data.openaiApiKey);
       } else {
@@ -84,7 +81,8 @@ const getSummary = async (videoDetails, subtitles) => {
         ];
 
         const openAiResponse = await openai.createChatCompletion({
-          model: 'gpt-3.5-turbo',
+          model: 'gpt-4o-mini',
+          // model: 'gpt-3.5-turbo',
           messages,
         });
 
